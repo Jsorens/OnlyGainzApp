@@ -16,6 +16,9 @@ switch (Platform.OS) {
   case "android":
     client.setPlatform("com.onlygainz_android.app");
     break;
+  case "ios":
+    client.setPlatform("com.onlygainz_ios.app");
+    break;
 }
 
 const database = new TablesDB(client);
