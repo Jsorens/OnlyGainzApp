@@ -1,6 +1,7 @@
 import { Tabs } from "expo-router";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import { StyleSheet, Text, View } from "react-native";
 
 const activeTintColor = "yellow";
 const inactiveTintColor = "gray";
@@ -25,8 +26,11 @@ export default function TabLayout() {
         name="index"
         options={{
           tabBarLabel: "Home",
-          tabBarIcon: ({ color }) => (
-            <FontAwesome name="home" size={iconWidth} color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            <View style={styles.iconContainer}>
+              <FontAwesome name="home" size={iconWidth} color={color} />
+              {focused && <View style={styles.activeLine} />}
+            </View>
           ),
           ...tabScreenOptions,
         }}
@@ -35,8 +39,11 @@ export default function TabLayout() {
         name="meals"
         options={{
           tabBarLabel: "Meals",
-          tabBarIcon: ({ color }) => (
-            <FontAwesome name="cutlery" size={iconWidth} color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            <View style={styles.iconContainer}>
+              <FontAwesome name="cutlery" size={iconWidth} color={color} />
+              {focused && <View style={styles.activeLine} />}
+            </View>
           ),
           ...tabScreenOptions,
         }}
@@ -45,8 +52,11 @@ export default function TabLayout() {
         name="workouts"
         options={{
           tabBarLabel: "Workouts",
-          tabBarIcon: ({ color }) => (
-            <FontAwesome6 name="dumbbell" size={iconWidth} color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            <View style={styles.iconContainer}>
+              <FontAwesome6 name="dumbbell" size={iconWidth} color={color} />
+              {focused && <View style={styles.activeLine} />}
+            </View>
           ),
           ...tabScreenOptions,
         }}
@@ -55,8 +65,11 @@ export default function TabLayout() {
         name="profile"
         options={{
           tabBarLabel: "Profile",
-          tabBarIcon: ({ color }) => (
-            <FontAwesome name="user" size={iconWidth} color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            <View style={styles.iconContainer}>
+              <FontAwesome name="user" size={iconWidth} color={color} />
+              {focused && <View style={styles.activeLine} />}
+            </View>
           ),
           ...tabScreenOptions,
         }}
@@ -66,8 +79,11 @@ export default function TabLayout() {
         name="settings"
         options={{
           tabBarLabel: "Settings",
-          tabBarIcon: ({ color }) => (
-            <FontAwesome name="gear" size={iconWidth} color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            <View style={styles.iconContainer}>
+              <FontAwesome name="gear" size={iconWidth} color={color} />
+              {focused && <View style={styles.activeLine} />}
+            </View>
           ),
           ...tabScreenOptions,
         }}
@@ -75,3 +91,18 @@ export default function TabLayout() {
     </Tabs>
   );
 }
+const styles = StyleSheet.create({
+  iconContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  activeLine: {
+    position: "absolute",
+    bottom: -20,
+    width: 35,
+    height: 3,
+    backgroundColor: activeTintColor,
+    borderRadius: 2,
+  },
+});
