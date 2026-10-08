@@ -21,7 +21,7 @@ export default function TabLayout() {
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen
-          name="foods/index"
+          name="foods"
           options={{
             title: "Search Food",
             headerShown: true,
