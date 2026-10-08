@@ -44,7 +44,7 @@ export default function FoodItemList() {
         console.error("Failed to fetch foods", error);
       } finally {
         setIsLoading(false);
-        console.log("Data fetched successfully!", 200);
+        console.log({ message: "Data fetched successfully!", status: 200 });
       }
     };
 
