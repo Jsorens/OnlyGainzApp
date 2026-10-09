@@ -1,9 +1,7 @@
-import { View, ScrollView, Text, FlatList, Pressable } from "react-native";
+import { Text, FlatList } from "react-native";
 import { database, config } from "@/lib/appwrite";
 import type { Food } from "@/Types/Meal/Food";
 import { useEffect, useState } from "react";
-import { Link, router } from "expo-router";
-import { useRouter } from "expo-router";
 import { FoodItemCard } from "./FoodItemCard";
 
 // This is just a basic test for displaying the food in the database.
