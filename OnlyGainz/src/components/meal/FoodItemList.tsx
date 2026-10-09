@@ -21,7 +21,7 @@ export default function FoodItemList() {
           tableId: config.col.Foods,
         });
 
-        console.log("Appwrite response:", response);
+        console.log("Appwrite response:", response.total);
         console.log("Number of foods:", response.rows.length);
 
         // Parsing the data from the table to an array of type Food.
