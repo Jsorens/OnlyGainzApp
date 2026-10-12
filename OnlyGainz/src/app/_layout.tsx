@@ -11,6 +11,14 @@ export default function TabLayout() {
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen 
+          name="create-workout-page"
+          options={{headerShown: false}}
+        />
+        <Stack.Screen 
+          name="workout-page"
+          options={{headerShown: false}}
+        />
       </Stack>
     </ThemeProvider>
   );

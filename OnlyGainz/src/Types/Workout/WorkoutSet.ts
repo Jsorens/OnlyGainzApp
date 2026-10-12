@@ -1,8 +1,9 @@
 import { Exercise } from "./Exercise";
-export type WorkoutSets = {
-  exercise: Exercise;
-  reps?: number;
-  setDuration?: number;
-  distance?: number;
-  weight?: number;
-};
+export interface WorkoutSetData {
+    exercise: Exercise;
+    setNumber: number;
+    reps: number;
+    //setDuration?: number | null;
+    //distance?: number | null;
+    weight: number;
+}
