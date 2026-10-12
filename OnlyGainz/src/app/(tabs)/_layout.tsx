@@ -35,6 +35,7 @@ export default function TabLayout() {
           ...tabScreenOptions,
         }}
       />
+
       <Tabs.Screen
         name="meals"
         options={{

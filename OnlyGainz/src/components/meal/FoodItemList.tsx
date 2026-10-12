@@ -3,14 +3,19 @@ import { database, config } from "@/lib/appwrite";
 import type { Food } from "@/Types/Meal/Food";
 import { useEffect, useState } from "react";
 import { FoodItemCard } from "./FoodItemCard";
+import { useLocalSearchParams } from "expo-router";
 
+type foodItemListProp = {
+  mealType: string;
+};
 // This is just a basic test for displaying the food in the database.
-export default function FoodItemList() {
+export default function FoodItemList({ mealType }: foodItemListProp) {
   // We check if the food item is rendered
-  console.log("Food item list rendererd");
+  console.log("Food item list rendered - ", mealType);
 
   // We change the state of the list.
   const [foods, setFoods] = useState<Food[]>([]);
+
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     // Asynkron function for fetching food data from the appwrite database
@@ -21,10 +26,11 @@ export default function FoodItemList() {
           tableId: config.col.Foods,
         });
 
-        console.log("Appwrite response:", response.total);
-        console.log("Number of foods:", response.rows.length);
+        //console.log("Appwrite response:", response.total);
+        //console.log("Number of foods:", response.rows.length);
 
         // Parsing the data from the table to an array of type Food.
+
         const foodData: Food[] = response.rows.map((food) => ({
           id: food.$id,
           name: food.name,
@@ -57,7 +63,9 @@ export default function FoodItemList() {
     <FlatList
       data={foods}
       keyExtractor={(item) => item.id}
-      renderItem={({ item }) => <FoodItemCard data={item} />}
+      renderItem={({ item }) => (
+        <FoodItemCard data={item} mealType={mealType} />
+      )}
       ListEmptyComponent={<Text>No foods found.</Text>}
     />
   );

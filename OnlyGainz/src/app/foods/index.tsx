@@ -1,14 +1,19 @@
-import { View, Text, TextInput } from "react-native";
+import { View, Text, TextInput, SafeAreaView } from "react-native";
 import FoodItemList from "@/components/meal/FoodItemList";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { useLocalSearchParams } from "expo-router";
+import CameraButton from "@/components/meal/Camera";
 
+// This represents the screen for foods
 export default function FoodScreen() {
-  console.log("FoodScreen rendered");
+  const { mealId } = useLocalSearchParams<{
+    mealId: string;
+  }>();
+  console.log("FoodScreen rendered - ", mealId);
   return (
     <View>
-      <Text>Søk etter matvarer</Text>
+      <CameraButton />
       <TextInput />
-      <FoodItemList />
+      <FoodItemList mealType={mealId} />
     </View>
   );
 }

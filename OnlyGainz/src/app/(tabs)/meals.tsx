@@ -1,15 +1,13 @@
 import { StyleSheet, Text, View } from "react-native";
 import MealCardList from "@/components/meal/MealCardList";
+import DailyNutritionSummary from "@/components/meal/DailyNutritionSummary";
+
 export default function Meals() {
   console.log("Meals rendered");
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome to OnlyGainz!</Text>
-      <View>
-        <Text style={styles.title}>
-          Calories: 2500, Protein: 140g, carbs: 250g, fat: 81g
-        </Text>
-      </View>
+      <DailyNutritionSummary />
       <MealCardList />
     </View>
   );
