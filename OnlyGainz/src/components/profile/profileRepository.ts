@@ -1,4 +1,4 @@
-import { database, config } from "@/lib/appwrite"
+import { database, config } from "../../lib/appwrite";
 
 export type DBUser = {
     id: number;

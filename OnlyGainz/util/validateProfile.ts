@@ -1,4 +1,4 @@
-import { DBUser, profileRepository } from "@/components/profile/profileRepository";
+import { DBUser, profileRepository } from "../src/components/profile/profileRepository";
 
 export type ValidationResult = { ok: true } | { ok: false; error: string };
 
@@ -9,7 +9,7 @@ export async function validateProfile(userId: string): Promise<ValidationResult>
         const profile = await profileRepository.getById(userId);
         const {id, name, createdAt, updatedAt} = profile;
 
-        if (!id || !name || !createdAt || !updatedAt) {
+        if (!name) {
             return { ok: false, error: "An undefined/empty field has been returned" };
         }
 

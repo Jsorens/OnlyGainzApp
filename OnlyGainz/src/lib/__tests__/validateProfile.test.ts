@@ -1,6 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { validateProfile, ValidationResult } from "../../util/validateProfile";
-import { DBUser, profileRepository } from "@/components/profile/profileRepository";
+import { validateProfile } from "../../../util/validateProfile";
 
 describe("validateRepositoryResults", () => {
     it("avviser feil bruker resultat", async () => {
@@ -11,7 +10,7 @@ describe("validateRepositoryResults", () => {
         }
 
         if (result.ok) {
-            expect(result.ok).toBe(true)
+            expect(result.ok).toBe(true);
         }
     });
 });
