@@ -13,12 +13,14 @@ export default function UserProfileCard({ data }: UserProfileProps) {
   const [profile, setProfile] = useState<DBUser | null>();
   const { userId } = useUser();
 
+  // reset profile if user logs out
   useEffect(() => {
     if (!userId) {
       setProfile(null);
       return;
     }
 
+    // get current users profile from db and save in profile state
     const getProfile = async () => {
       try {
         if (!userId) return;
@@ -55,15 +57,16 @@ export default function UserProfileCard({ data }: UserProfileProps) {
     }
   }
 
-const updateField = <K extends keyof DBUser>(key: K, value: DBUser[K]) => {
-  setProfile(prev => {
-    if (!prev) return prev;
-    return {
-      ...prev,
-      [key]: value,
-    };
-  });
-};
+  // map changes to the profile state
+  const updateField = <K extends keyof DBUser>(key: K, value: DBUser[K]) => {
+    setProfile(prev => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        [key]: value,
+      };
+    });
+  };
 
     return (
         <View style={styles.container}>

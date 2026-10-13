@@ -1,5 +1,4 @@
 import { database, config } from "@/lib/appwrite"
-import { UserProfile } from "@/Types/UserProfile";
 
 export type DBUser = {
     id: number;
