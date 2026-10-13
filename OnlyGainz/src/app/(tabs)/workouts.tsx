@@ -1,10 +1,18 @@
-import { StyleSheet, Text, View } from "react-native";
+import { router } from "expo-router";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function Workouts() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome to OnlyGainz!</Text>
-      <Text style={styles.text}>Workouts</Text>
+      <Text style={styles.text}>Workout</Text>
+      <Pressable onPress={() => 
+          router.navigate({
+              pathname: '/workout/createNewWorkoutRoutine'
+          })
+        }
+      >
+        <Text style={styles.text}>Add Exercise</Text>
+      </Pressable>
     </View>
   );
 }

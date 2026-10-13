@@ -12,11 +12,11 @@ export default function TabLayout() {
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen 
-          name="workout/createNewWorkout"
+          name="workout/createNewWorkoutRoutine"
           options={{title: "Create New Workout"}}
         />
         <Stack.Screen 
-          name="workout-page"
+          name="workout/startWorkout"
           options={{headerShown: false}}
         />
       </Stack>
