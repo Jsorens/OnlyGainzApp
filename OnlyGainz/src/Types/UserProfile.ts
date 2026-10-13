@@ -1,4 +1,4 @@
-import ROLES from "../app/authProvider/context/types/Role";
+import ROLES from "../app/authProvider/types/Role";
 //import { User } from "./Auth/User";
 
 type User = {

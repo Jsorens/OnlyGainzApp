@@ -8,7 +8,7 @@ type UserContextValue = {
 const UserContext = createContext<UserContextValue | undefined>(undefined);
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [userId, setUserId] = useState<string | null>("6ab97cb0002e88d56906"); // assume logged in for now
+    const [userId, setUserId] = useState<string | null>("6ab97cb0002e88d56906"); // assume logged in for now, testing
 
     return (
         <UserContext.Provider value={{ userId, setUserId }}>

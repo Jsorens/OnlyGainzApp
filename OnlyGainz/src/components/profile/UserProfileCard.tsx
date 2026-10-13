@@ -1,8 +1,7 @@
 import { View, Text, Pressable, StyleSheet, TextInput } from "react-native";
 import React, { useEffect, useState } from "react";
 //import { UserProfile } from "@/Types/UserProfile";
-import { DBUser } from "./userRepository";
-import { userRepository } from "./userRepository";
+import { DBUser, profileRepository } from "./profileRepository";
 import { useUser } from "@/app/authProvider/context/UserContext";
 
 type UserProfileProps = {
@@ -23,7 +22,7 @@ export default function UserProfileCard({ data }: UserProfileProps) {
     const getProfile = async () => {
       try {
         if (!userId) return;
-        const profile = await userRepository.getById(userId); //skal bruke service
+        const profile = await profileRepository.getById(userId); //skal bruke service
         setProfile(profile);
       }
       catch (e) {
@@ -46,7 +45,7 @@ export default function UserProfileCard({ data }: UserProfileProps) {
   const handleSave = async () => {
     try {
       if (!userId || !profile) return;
-      const updated = await userRepository.updateProfile(userId, profile)
+      const updated = await profileRepository.updateProfile(userId, profile)
       setProfile(updated);
       setIsEditing(false);
       console.log("Saved");

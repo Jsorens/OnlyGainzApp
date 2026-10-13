@@ -8,26 +8,12 @@ export type DBUser = {
     updatedAt: string;
 }
 
-const user: UserProfile = {
-    user: {
-        name: "aymb00",
-        email: "aymanb@hiof.no",
-    },
-    firstName: "Ayman",
-    lastName: "Bellamine",
-    bio: "meow",
-    age: 26,
-    createdAt: "Today",
-    location: "Fredrikstad, Norway",
-    followersCount: 69,
-}
-
-export interface UserRepository {
+export interface ProfileRepository {
     getById: (userId: string) => Promise<DBUser>;
     updateProfile: (userId: string, profileData: DBUser) => Promise<DBUser>;
 }
 
-export function createUserRepository(): UserRepository {
+export function createProfileRepository(): ProfileRepository {
     return {
         getById: async (userId: string) => {
             try {
@@ -35,9 +21,6 @@ export function createUserRepository(): UserRepository {
                     databaseId: config.db,
                     tableId: config.col.Users
                 })
-
-                console.log("Appwrite response: ", response.total);
-                console.log("Total users: ", response.rows.length);
 
                 const row = response.rows.find((row: any) => row.$id === userId);
                 if (!row) {
@@ -63,10 +46,7 @@ export function createUserRepository(): UserRepository {
                 tableId: config.col.Users,
                 rowId: userId,
                 data: {
-                    id: profileData.id,
                     name: profileData.name,
-                    createdAt: profileData.createdAt,
-                    updatedAt: profileData.updatedAt
                 },
             });
             return profileData;
@@ -74,4 +54,4 @@ export function createUserRepository(): UserRepository {
     };
 }
 
-export const userRepository = createUserRepository();
+export const profileRepository = createProfileRepository();
