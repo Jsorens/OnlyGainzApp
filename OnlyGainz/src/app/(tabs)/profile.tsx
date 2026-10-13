@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import UserProfileCard from "../../components/profile/UserProfileCard";
+import UserProfileCard from "../../features/profile/UserProfileCard";
 import { useUser } from "../authProvider/context/UserContext";
 
 export default function Profile() {

@@ -1,4 +1,4 @@
-import MealCard from "@/components/meal/MealCard";
+import MealCard from "@/features/meal/MealCard";
 import { View } from "react-native";
 
 // Defining each of the meals

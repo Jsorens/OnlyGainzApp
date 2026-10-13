@@ -1,5 +1,5 @@
 import { View, Text, TextInput } from "react-native";
-import FoodItemList from "@/components/meal/FoodItemList";
+import FoodItemList from "@/features/meal/FoodItemList";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 export default function FoodScreen() {

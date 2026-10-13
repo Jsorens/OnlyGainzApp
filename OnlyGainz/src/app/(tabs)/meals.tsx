@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import MealCardList from "@/components/meal/MealCardList";
+import MealCardList from "@/features/meal/MealCardList";
 export default function Meals() {
   console.log("Meals rendered");
   return (
