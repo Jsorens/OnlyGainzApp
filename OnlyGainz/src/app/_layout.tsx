@@ -12,8 +12,8 @@ export default function TabLayout() {
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen 
-          name="create-workout-page"
-          options={{headerShown: false}}
+          name="workout/createNewWorkout"
+          options={{title: "Create New Workout"}}
         />
         <Stack.Screen 
           name="workout-page"
