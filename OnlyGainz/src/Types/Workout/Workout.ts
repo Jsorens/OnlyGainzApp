@@ -1,6 +1,6 @@
-import { WorkoutSets } from "./WorkoutSet";
+import { WorkoutSetData } from "./WorkoutSet";
 export type Workout = {
   date: string;
   duration: string;
-  exersices: WorkoutSets[];
+  exersices: WorkoutSetData[];
 };
