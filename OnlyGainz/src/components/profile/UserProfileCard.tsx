@@ -70,7 +70,6 @@ export default function UserProfileCard({ data }: UserProfileProps) {
 
     return (
         <View style={styles.container}>
-          <Text style={styles.text}>ID: {profile?.id}</Text>
           
           {isEditing ? (
             <>
@@ -82,6 +81,54 @@ export default function UserProfileCard({ data }: UserProfileProps) {
             </>
           ) : (
             <Text style={styles.text}>Name: {profile?.name}</Text>
+          )}
+
+          {isEditing ? (
+            <>
+              <TextInput 
+                value={profile?.age}
+                onChangeText={text => updateField("age", text)}
+                placeholder="Age"
+              />
+            </>
+          ) : (
+            <Text style={styles.text}>Age: {profile?.age}</Text>
+          )}
+
+          {isEditing ? (
+            <>
+              <TextInput 
+                value={profile?.bio}
+                onChangeText={text => updateField("bio", text)}
+                placeholder="Bio"
+              />
+            </>
+          ) : (
+            <Text style={styles.text}>Bio: {profile?.bio}</Text>
+          )}
+
+          {isEditing ? (
+            <>
+              <TextInput 
+                value={profile?.city}
+                onChangeText={text => updateField("city", text)}
+                placeholder="City"
+              />
+            </>
+          ) : (
+            <Text style={styles.text}>City: {profile?.city}</Text>
+          )}
+
+          {isEditing ? (
+            <>
+              <TextInput 
+                value={profile?.country}
+                onChangeText={text => updateField("country", text)}
+                placeholder="Country"
+              />
+            </>
+          ) : (
+            <Text style={styles.text}>Country: {profile?.country}</Text>
           )}
 
           {/* Buttons */}
