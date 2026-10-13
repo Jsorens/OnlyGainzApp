@@ -1,36 +1,19 @@
 import { StyleSheet, Text, View } from "react-native";
 import UserProfileCard from "../../components/profile/UserProfileCard";
-import { UserProfile } from "@/Types/UserProfile";
-import { userRepository } from "@/components/profile/userRepository";
+import { DBUser, userRepository } from "@/components/profile/userRepository";
 import { useState, useEffect } from "react";
+import { database, config } from "@/lib/appwrite";
+import { useUser } from "../authProvider/context/UserContext";
 
 export default function Profile() {
-
-  const [profile, setProfile] = useState<UserProfile>();
-
-  useEffect(() => {
-    async function loadProfile() {
-      try {
-        const user = await userRepository.list();
-        setProfile(user);
-      } 
-      finally {
-        if (profile !== undefined && profile.user === undefined) {
-          return;
-        }
-      }
-    }
-    loadProfile();
-  }, []);
-
-  if (profile === undefined)
-    return;
+  const { userId } = useUser();
   
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome to OnlyGainz!</Text>
       <Text style={styles.text}>Profile</Text>
-      <UserProfileCard data={ profile }/>
+      {userId ? <UserProfileCard data={ userId }/>
+      : <Text>You are not logged in</Text>}
     </View>
   );
 }

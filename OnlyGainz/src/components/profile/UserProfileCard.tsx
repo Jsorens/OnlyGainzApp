@@ -1,30 +1,53 @@
 import { View, Text, Pressable, StyleSheet, TextInput } from "react-native";
-import { UserProfile } from "@/Types/UserProfile";
-import { userRepository } from "./userRepository";
 import React, { useEffect, useState } from "react";
+//import { UserProfile } from "@/Types/UserProfile";
+import { DBUser } from "./userRepository";
+import { userRepository } from "./userRepository";
+import { useUser } from "@/app/authProvider/context/UserContext";
 
 type UserProfileProps = {
-    data: UserProfile;
+  data: string | null;
 }
 
 export default function UserProfileCard({ data }: UserProfileProps) {
   const [isEditing, setIsEditing] = useState(false);
-  const [editableProfile, setEditableProfile] = useState<UserProfile>(data);
+  const [profile, setProfile] = useState<DBUser | null>();
+  const { userId } = useUser();
 
+  useEffect(() => {
+    if (!userId) {
+      setProfile(null);
+      return;
+    }
+
+    const getProfile = async () => {
+      try {
+        if (!userId) return;
+        const profile = await userRepository.getById(userId); //skal bruke service
+        setProfile(profile);
+      }
+      catch (e) {
+        console.error("We couldn't find you: ", e);
+      }
+    };
+  getProfile();
+  }, [userId])
+  
   const handleEdit = () => {
-    setEditableProfile(data);
     setIsEditing(true);
   };
 
   const handleCancel = () => {
-    setEditableProfile(data); // discard local changes
+    if (!profile) return; // lag error handling
+    setProfile(profile); // discard local changes
     setIsEditing(false);
   }
 
   const handleSave = async () => {
     try {
-      const updated = await userRepository.updateProfile(editableProfile)
-      setEditableProfile(updated);
+      if (!userId || !profile) return;
+      const updated = await userRepository.updateProfile(userId, profile)
+      setProfile(updated);
       setIsEditing(false);
       console.log("Saved");
     }
@@ -33,73 +56,31 @@ export default function UserProfileCard({ data }: UserProfileProps) {
     }
   }
 
-  const updateUserField = <K extends keyof UserProfile>(key: K, value: UserProfile[K]) => {
-      setEditableProfile(prev => ({
-        ...prev,
-        [key]: value,
-      }))
-  }
+const updateField = <K extends keyof DBUser>(key: K, value: DBUser[K]) => {
+  setProfile(prev => {
+    if (!prev) return prev;
+    return {
+      ...prev,
+      [key]: value,
+    };
+  });
+};
 
     return (
         <View style={styles.container}>
-          <Text style={styles.text}>Username: {editableProfile.user.name}</Text>
-          <Text style={styles.text}>Email: {editableProfile.user.email}</Text>
-
-          {isEditing ? (
-            <>
-              <TextInput
-                value={editableProfile.firstName}
-                onChangeText={text => updateUserField("firstName", text)}
-                placeholder="First name"
-                />
-              <TextInput 
-                value={editableProfile.lastName}
-                onChangeText={text => updateUserField("lastName", text)}
-                placeholder="Last name"  
-              />
-            </>
-          ) : (
-            <Text style={styles.text}>Full name: {editableProfile.firstName} {editableProfile.lastName}</Text>
-          )}
-
-          {isEditing ? (
-            <>
-              <TextInput 
-                value={editableProfile.bio ?? ""}
-                onChangeText={text => updateUserField("bio", text)}
-                placeholder="Bio"
-              />
-            </>
-          ) : (
-            <Text style={styles.text}>Bio: {editableProfile.bio}</Text>
-          )}
-
-          {isEditing ? (
-            <>
-              <TextInput 
-                value={String(editableProfile.age)}
-                onChangeText={text => updateUserField("age", Number(text))}
-                placeholder="Age"
-              />
-            </>
-          ) : (
-            <Text style={styles.text}>Age: {editableProfile.age}</Text>
-          )}
+          <Text style={styles.text}>ID: {profile?.id}</Text>
           
           {isEditing ? (
             <>
               <TextInput 
-                value={editableProfile.location}
-                onChangeText={text => updateUserField("location", text)}
-                placeholder="Location"
+                value={profile?.name}
+                onChangeText={text => updateField("name", text)}
+                placeholder="Name"
               />
             </>
           ) : (
-            <Text style={styles.text}>Location: {editableProfile.location}</Text>
+            <Text style={styles.text}>Name: {profile?.name}</Text>
           )}
-
-          <Text style={styles.text}>Followers: {editableProfile.followersCount}</Text>
-          <Text style={styles.text}>Joined: {editableProfile.createdAt}</Text>
 
           {/* Buttons */}
           <View>

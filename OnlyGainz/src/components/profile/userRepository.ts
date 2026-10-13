@@ -1,13 +1,12 @@
-import { database, config } from "@/lib/appwrite";
-import { User } from "@/Types/Auth/User";
+import { database, config } from "@/lib/appwrite"
 import { UserProfile } from "@/Types/UserProfile";
 
-/*
-const response = await database.listRows({
-          databaseId: config.db,
-          tableId: config.col.Foods,
-})
-*/
+export type DBUser = {
+    id: number;
+    name: string;
+    createdAt: string;
+    updatedAt: string;
+}
 
 const user: UserProfile = {
     user: {
@@ -24,26 +23,55 @@ const user: UserProfile = {
 }
 
 export interface UserRepository {
-    //create: (realm: any) => Promise<any>;
-    list: () => Promise<UserProfile>;
-    //create: () => Promise<UserProfile>;
-    updateProfile: (profileData: UserProfile) => Promise<UserProfile>
+    getById: (userId: string) => Promise<DBUser>;
+    updateProfile: (userId: string, profileData: DBUser) => Promise<DBUser>;
 }
 
-export function createUserRepository(db: UserProfile): UserRepository {
-    let dbMutable = db;
-
+export function createUserRepository(): UserRepository {
     return {
-        list: async () => {
-            return db;
+        getById: async (userId: string) => {
+            try {
+                const response = await database.listRows({
+                    databaseId: config.db,
+                    tableId: config.col.Users
+                })
+
+                console.log("Appwrite response: ", response.total);
+                console.log("Total users: ", response.rows.length);
+
+                const row = response.rows.find((row: any) => row.$id === userId);
+                if (!row) {
+                    throw new Error("User not found");
+                }
+
+                const dbUser: DBUser = {
+                    id: row.id,
+                    name: row.name,
+                    createdAt: row.$createdAt,
+                    updatedAt: row.$updatedAt,
+                };
+
+                return dbUser;
+            } catch (e) {
+                console.error("Failed to fetch user:", e);
+                throw e;
+            }
         },
-        updateProfile: async (profileData: UserProfile) => {
-            dbMutable = profileData;
-            console.log(dbMutable);
-            return dbMutable;
+        updateProfile: async (userId: string, profileData: DBUser) => {
+            const response = await database.updateRow({
+                databaseId: config.db,
+                tableId: config.col.Users,
+                rowId: userId,
+                data: {
+                    id: profileData.id,
+                    name: profileData.name,
+                    createdAt: profileData.createdAt,
+                    updatedAt: profileData.updatedAt
+                },
+            });
+            return profileData;
         },
     };
 }
 
-export const userRepository = createUserRepository(user);
-
+export const userRepository = createUserRepository();

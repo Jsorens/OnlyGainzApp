@@ -1,4 +1,4 @@
-import { Role } from "./Auth/Role";
+import ROLES from "../app/authProvider/context/types/Role";
 //import { User } from "./Auth/User";
 
 type User = {
@@ -15,6 +15,6 @@ export type UserProfile = {
   age: number;
   createdAt: string; //Date;
   location: string;
-  role?: Role;
+  role?: typeof ROLES;
   followersCount: number;
 }
