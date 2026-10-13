@@ -1,4 +1,7 @@
 import { describe, it, expect } from "vitest";
+import { validateExercise, ValidationResult } from "../../../util/validateExercise";
+import { Exercise } from "../../../types/Exercise";
+
 
 describe("validateExercise", () => {
     it("avviser alt for høy MET verdi", () => {
@@ -9,8 +12,8 @@ describe("validateExercise", () => {
         const muscleGroup = ["quadriceps", "glutes", "hamstrings", "calves", "pectorals", "deltiods", "triceps", "abdominals", "erector spinae", "hip flexors"]
         const equipment = "None required";
 
-        const result = validateExercise(name, description, met, difficulty, muscleGroup, equipment);
-        expect (result.error).toBe("MET verdien kan ikke overstige 22.5");
+        const result = validateExercise({ name, description, met, difficulty, muscleGroup, equipment });
+        expect (result.ok).toBe("MET verdien kan ikke overstige 22.5");
     });
 
     it("avviser tom muscleGroup felt", () => {
@@ -18,11 +21,11 @@ describe("validateExercise", () => {
         const description = "For jævlig";
         const met = 8.0;
         const difficulty = "Medium";
-        const muscleGroup = [];
+        const muscleGroup: string[] = [];
         const equipment = "None required";
 
-        const result = validateExercise(name, description, met, difficulty, muscleGroup, equipment);
-        expect (result.error).toBe("Passord må bestå av minst 10 tegn, og inneholde tall og symboler.");
+        const result = validateExercise({ name, description, met, difficulty, muscleGroup, equipment });
+        expect (result.ok).toBe("Passord må bestå av minst 10 tegn, og inneholde tall og symboler.");
     });
 
     it("avviser tom muscleGroup felt", () => {
@@ -33,7 +36,7 @@ describe("validateExercise", () => {
         const muscleGroup = ["quadriceps", "glutes", "hamstrings", "calves", "pectorals", "deltiods", "triceps", "abdominals", "erector spinae", "hip flexors"];
         const equipment = "None required";
 
-        const result = validateExercise(name, description, met, difficulty, muscleGroup, equipment);
-        expect (result.error).toBe("Passord må bestå av minst 10 tegn, og inneholde tall og symboler.");
+        const result = validateExercise({ name, description, met, difficulty, muscleGroup, equipment });
+        expect (result.ok).toBe("Passord må bestå av minst 10 tegn, og inneholde tall og symboler.");
     });
   });

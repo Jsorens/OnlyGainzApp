@@ -3,6 +3,6 @@ export type Exercise = {
     description: string,
     met: number,
     difficulty: string,
-    muscleGroup: string[],
+    muscleGroup: string[] | [],
     equipment: string,
 }

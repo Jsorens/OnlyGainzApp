@@ -1,7 +1,8 @@
-import { Exercise } from "../../types/Exercise"
+import { Exercise } from "../types/Exercise"
 
 export type ValidationResult = { ok: true } | { ok: false; error: string };
 
+/*
 const exerciseObject: Exercise = {
     name: "Burpees",
     description: "For jævlig",
@@ -10,6 +11,7 @@ const exerciseObject: Exercise = {
     muscleGroup: ["quadriceps", "glutes", "hamstrings", "calves", "pectorals", "deltiods", "triceps", "abdominals", "erector spinae", "hip flexors"],
     equipment: "None required",
 }
+*/
 
 export function validateExercise(exercise: Exercise): ValidationResult  {
     const { name, description, met, difficulty, muscleGroup, equipment } = exercise;
@@ -22,7 +24,7 @@ export function validateExercise(exercise: Exercise): ValidationResult  {
         return { ok: false, error: "MET verdien må være positiv" }
     }
 
-    if (!(muscleGroup.size > 0)) {
+    if (!(muscleGroup.length > 0)) {
         return { ok: false, error: "Muskelgrupper må være inkludert" };
     }
 
