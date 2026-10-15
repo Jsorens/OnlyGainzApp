@@ -1,7 +1,8 @@
-import { Tabs } from "expo-router";
+import { Tabs, Redirect } from "expo-router";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { StyleSheet, Text, View } from "react-native";
+import { useAuth } from "@/contexts/AuthContext";
 
 const activeTintColor = "yellow";
 const inactiveTintColor = "gray";
@@ -20,7 +21,9 @@ const tabScreenOptions = {
 const iconWidth = 24; // px
 
 export default function TabLayout() {
-  return (
+  const { session } = useAuth();
+  return !session ? <Redirect href="/login"/> 
+  : (
     <Tabs screenOptions={{ ...tabOptions }}>
       <Tabs.Screen
         name="index"

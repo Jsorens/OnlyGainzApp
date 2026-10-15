@@ -2,7 +2,7 @@ import { View, Text, Pressable, StyleSheet, TextInput } from "react-native";
 import React, { useEffect, useState } from "react";
 import { profileRepository, ProfileRepository } from "@/api/profile";
 import { Profile } from "../types/Profile";
-import { useAuth } from "@/contexts/AuthProvider";
+import { useAuth } from "@/contexts/AuthContext";
 
 type UserProfileProps = {
   data: string | null;

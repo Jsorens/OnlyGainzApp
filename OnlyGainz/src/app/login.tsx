@@ -1,0 +1,86 @@
+import { SafeAreaView, View,  TextInput, Text, TouchableOpacity, StyleSheet } from 'react-native'
+import {useState} from 'react'
+import { useAuth } from '@/contexts/AuthContext'
+import { Redirect } from 'expo-router'
+
+
+const signin = () => {
+    const {session, login} = useAuth();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleSubmit = async () => {
+        login({email, password})
+    }
+
+    if(session) return <Redirect href="/"/>
+  return (
+      <View  style={styles.container}>
+        <View>
+          <Text style={styles.headline}>SignIn</Text>
+
+          <Text>Email:</Text>
+          <TextInput 
+            placeholder='Enter your email...' 
+            style={styles.input}
+            value={email}
+            onChangeText={(text) => setEmail(text)}
+            />
+
+          <Text>Password:</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+            secureTextEntry
+            />
+
+          <TouchableOpacity 
+            style={styles.button} 
+            onPress={handleSubmit}
+          >
+            <Text style={styles.buttonText}>Login</Text>
+          </TouchableOpacity>
+          </View>
+      </View>
+
+  )
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex:1,
+    padding: 20,
+    justifyContent: 'center',
+  },
+  headline:{
+    textAlign:'center',
+    marginTop:-100,
+    marginBottom:50,
+    fontWeight:700,
+    fontStyle:'italic'
+  },
+  input:{
+    borderWidth:1,
+    borderRadius:10, 
+    padding:10,
+
+    marginTop:10,
+    marginBottom:10,
+    borderColor:"grey"
+  },
+  button: {
+    backgroundColor: 'black',
+    padding: 12,
+    borderRadius: 6,
+    alignItems: 'center',
+    marginTop:10,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 18,
+  },
+})
+
+export default signin
