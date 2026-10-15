@@ -1,4 +1,4 @@
-import { Food } from "../Meal/Food";
+import { Food } from "./Food";
 // This type represents serving of a food. It stores macros, and serving size.
 export type FoodEntry = {
   id: string;

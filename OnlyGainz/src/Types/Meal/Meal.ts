@@ -1,5 +1,5 @@
-import { FoodEntry } from "../Meal/FoodEntry";
-import { MealType } from "../Meal/MealType";
+import { FoodEntry } from "./FoodEntry";
+import { MealType } from "./MealType";
 // This type stores the foods you have eaten for a specific meal of the day.
 export type Meal = {
   id: string;

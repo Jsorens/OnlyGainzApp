@@ -1,18 +1,11 @@
 import { database, config } from "@/lib/appwrite"
+import { Profile } from "../features/profile/types/Profile";
 
-export type DBUser = {
-    id: number;
-    name: string;
-    bio: string;
-    age: string;
-    city: string;
-    country: string;
-    //updatedAt: 
-}
+
 
 export interface ProfileRepository {
-    getById: (userId: string) => Promise<DBUser>;
-    updateProfile: (userId: string, profileData: DBUser) => Promise<DBUser>;
+    getById: (userId: string) => Promise<Profile>;
+    updateProfile: (userId: string, profileData: Profile) => Promise<Profile>;
 }
 
 export function createProfileRepository(): ProfileRepository {
@@ -41,7 +34,7 @@ export function createProfileRepository(): ProfileRepository {
                     throw new Error("Profile not found");
                 }
 
-                const dbUser: DBUser = {
+                const dbUser: Profile = {
                     id: userRow.id,
                     name: userRow.name,
                     bio: profileRow.bio,
@@ -56,7 +49,7 @@ export function createProfileRepository(): ProfileRepository {
                 throw e;
             }
         },
-        updateProfile: async (userId: string, profileData: DBUser) => {
+        updateProfile: async (userId: string, profileData: Profile) => {
             const userResponse = await database.updateRow({
                 databaseId: config.db,
                 tableId: config.col.Users,
