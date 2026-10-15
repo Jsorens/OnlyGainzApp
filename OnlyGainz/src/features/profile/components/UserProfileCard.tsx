@@ -1,9 +1,8 @@
 import { View, Text, Pressable, StyleSheet, TextInput } from "react-native";
 import React, { useEffect, useState } from "react";
-//import { UserProfile } from "@/Types/UserProfile";
-import { DBUser, profileRepository } from "../profile-repository";
-import { profileService } from "../profile-service";
-import { useUser } from "@/authProvider/context/UserContext";
+import { profileRepository, ProfileRepository } from "@/api/profile";
+import { Profile } from "../types/Profile";
+import { useAuth } from "@/contexts/AuthProvider";
 
 type UserProfileProps = {
   data: string | null;
@@ -11,12 +10,14 @@ type UserProfileProps = {
 
 export default function UserProfileCard({ data }: UserProfileProps) {
   const [isEditing, setIsEditing] = useState(false);
-  const [profile, setProfile] = useState<DBUser | null>();
-  const { userId } = useUser();
+  const [profile, setProfile] = useState<Profile | null>();
+  const { user } = useAuth();
+
+  if (!user) return;
 
   // reset profile if user logs out
   useEffect(() => {
-    if (!userId) {
+    if (!user.id) {
       setProfile(null);
       return;
     }
@@ -24,8 +25,8 @@ export default function UserProfileCard({ data }: UserProfileProps) {
     // get current users profile from db and save in profile state
     const getProfile = async () => {
       try {
-        if (!userId) return;
-        const profile = await profileRepository.getById(userId); //skal bruke service
+        if (!user.id) return;
+        const profile = await profileRepository.getById(user.id); //skal bruke service
         setProfile(profile);
       }
       catch (e) {
@@ -33,7 +34,7 @@ export default function UserProfileCard({ data }: UserProfileProps) {
       }
     };
   getProfile();
-  }, [userId])
+  }, [user.id])
   
   const handleEdit = () => {
     setIsEditing(true);
@@ -47,8 +48,8 @@ export default function UserProfileCard({ data }: UserProfileProps) {
 
   const handleSave = async () => {
     try {
-      if (!userId || !profile) return;
-      const updated = await profileRepository.updateProfile(userId, profile)
+      if (!user.id || !profile) return;
+      const updated = await profileRepository.updateProfile(user.id, profile)
       setProfile(updated);
       setIsEditing(false);
       console.log("Saved");
@@ -59,7 +60,7 @@ export default function UserProfileCard({ data }: UserProfileProps) {
   }
 
   // map changes to the profile state
-  const updateField = <K extends keyof DBUser>(key: K, value: DBUser[K]) => {
+  const updateField = <K extends keyof Profile>(key: K, value: Profile[K]) => {
     setProfile(prev => {
       if (!prev) return prev;
       return {
