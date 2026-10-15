@@ -1,8 +1,9 @@
 import { View, Text, Pressable, StyleSheet, TextInput } from "react-native";
 import React, { useEffect, useState } from "react";
 //import { UserProfile } from "@/Types/UserProfile";
-import { DBUser, profileRepository } from "./profileRepository";
-import { useUser } from "@/app/authProvider/context/UserContext";
+import { DBUser, profileRepository } from "../profile-repository";
+import { profileService } from "../profile-service";
+import { useUser } from "@/authProvider/context/UserContext";
 
 type UserProfileProps = {
   data: string | null;

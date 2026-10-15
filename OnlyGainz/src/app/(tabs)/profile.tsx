@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from "react-native";
-import UserProfileCard from "../../features/profile/UserProfileCard";
-import { useUser } from "../authProvider/context/UserContext";
+import UserProfileCard from "@/features/profile/components/UserProfileCard";
+import { useUser } from "../../authProvider/context/UserContext";
 
 export default function Profile() {
   const { userId } = useUser();

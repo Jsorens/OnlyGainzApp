@@ -53,7 +53,6 @@ export function createProfileRepository(): ProfileRepository {
 
                 return dbUser;
             } catch (e) {
-                console.error("Failed to fetch user:", e);
                 throw e;
             }
         },
