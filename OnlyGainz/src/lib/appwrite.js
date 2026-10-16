@@ -6,6 +6,7 @@ const config = {
   db: "6ab957e40024b4677145",
   col: {
     Users: "6ab957ec001842c5f3e8",
+    Foods: "6ac76db7001c67602dc6",
   },
 };
 const client = new Client()

@@ -1,10 +1,14 @@
 import { StyleSheet, Text, View } from "react-native";
 import HomeIcon from "@/assets/images/svg/HomeIcon.svg";
+import DailyNutritionSummary from "@/components/meal/DailyNutritionSummary";
 export default function Home() {
   return (
     <View style={styles.container}>
       <HomeIcon width={200} height={200} color="yellow" />
       <Text style={styles.title}>Welcome to OnlyGainz!</Text>
+
+      <DailyNutritionSummary />
+
       <Text style={styles.text}>
         OnlyGainz is a fitness app that helps you track your workouts and
         progress.

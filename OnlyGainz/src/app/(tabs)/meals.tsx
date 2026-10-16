@@ -1,18 +1,14 @@
 import { StyleSheet, Text, View } from "react-native";
+import MealCardList from "@/components/meal/MealCardList";
+import DailyNutritionSummary from "@/components/meal/DailyNutritionSummary";
 
 export default function Meals() {
+  console.log("Meals rendered");
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome to OnlyGainz!</Text>
-      <Text>
-        OnlyGainz is a fitness app that helps you track your workouts and
-        progress.
-      </Text>
-      <Text>Get started by exploring the app and setting up your profile.</Text>
-      <Text>
-        Check out the documentation for more information on how to use the app.
-      </Text>
-      <Text>Happy lifting!</Text>
+      <DailyNutritionSummary />
+      <MealCardList />
     </View>
   );
 }
