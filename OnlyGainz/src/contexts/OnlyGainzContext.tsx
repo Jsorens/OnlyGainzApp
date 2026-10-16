@@ -10,18 +10,13 @@ import {
 
 import type { Food } from "@/Types/Meal/Food";
 import type { Meal } from "@/Types/Meal/Meal";
-
-type Macros = {
-  calories: number;
-  carbs: number;
-  protein: number;
-  fat: number;
-};
+import type { Macros } from "@/Types/Meal/Macros";
+import { MealLog } from "@/Types/Meal/MealLog";
 
 type OnlyGainzContextType = {
   meals: Meal[];
   addFood: (food: Food, quantity: number, mealType: string) => void;
-  removeFood: (id: string) => void;
+  removeFood: (id: string, mealType: string) => void;
   getMacros: () => Macros;
 };
 
@@ -45,11 +40,11 @@ export function MealsProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const totals = consumedMeals.reduce(
       (total, meal) => {
-        meal.foods.forEach((food) => {
-          total.calories += food.calories;
-          total.carbs += food.carbs;
-          total.protein += food.protein;
-          total.fat += food.fat;
+        meal.foods.forEach((log) => {
+          total.calories += log.foodItem.macros.calories;
+          total.carbs += log.foodItem.macros.carbs;
+          total.protein += log.foodItem.macros.protein;
+          total.fat += log.foodItem.macros.fat;
         });
 
         return total;
@@ -60,18 +55,42 @@ export function MealsProvider({ children }: { children: ReactNode }) {
     setMacros(totals);
   }, [consumedMeals]);
 
-  function getMacros() {
-    return macros;
+  function getMacros(): Macros {
+    return consumedMeals.reduce(
+      (total, meal) => {
+        meal.foods.forEach((log) => {
+          total.calories += log.foodItem.macros.calories * log.quantity;
+          total.carbs += log.foodItem.macros.carbs * log.quantity;
+          total.protein += log.foodItem.macros.protein * log.quantity;
+          total.fat += log.foodItem.macros.fat * log.quantity;
+        });
+        return total;
+      },
+      {
+        calories: 0,
+        protein: 0,
+        carbs: 0,
+        fat: 0,
+      },
+    );
   }
 
   function addFood(food: Food, quantity: number, mealType: string) {
-    const result: Food = {
-      ...food,
-      calories: food.calories * quantity,
-      carbs: food.carbs * quantity,
-      protein: food.protein * quantity,
-      fat: food.fat * quantity,
-      servingSize: food.servingSize * quantity,
+    // Legger til en matoppføring
+    // While id is the same as already existing id's
+    let randomId: string;
+    let exists: boolean;
+    do {
+      randomId = Math.floor(1000000000 + Math.random() * 9000000000).toString();
+      exists = consumedMeals.some((meal) => {
+        meal.foods.some((log) => log.id === randomId);
+      });
+    } while (exists);
+
+    const result: MealLog = {
+      id: randomId,
+      quantity: quantity,
+      foodItem: food,
     };
 
     setConsumedMeals((previous) => [
@@ -84,8 +103,19 @@ export function MealsProvider({ children }: { children: ReactNode }) {
   }
 
   // Funksjon for å fjerne måltid
-  function removeFood(id: string) {
-    throw console.error("Method not implemented");
+  function removeFood(id: string, mealType: string) {
+    setConsumedMeals((previousMeals) =>
+      previousMeals.map((meal) => {
+        if (meal.type !== mealType) {
+          return meal;
+        }
+
+        return {
+          ...meal,
+          foods: meal.foods.filter((log) => log.id !== id),
+        };
+      }),
+    );
   }
 
   return (

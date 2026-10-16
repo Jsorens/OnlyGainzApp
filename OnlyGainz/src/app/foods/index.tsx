@@ -1,7 +1,7 @@
 import { View, Text, TextInput, SafeAreaView } from "react-native";
-import FoodItemList from "@/components/meal/FoodItemList";
+import FoodItemList from "@/components/food/FoodItemList";
 import { useLocalSearchParams } from "expo-router";
-import CameraButton from "@/components/meal/Camera";
+import CameraButton from "@/components/food/Camera";
 
 // This represents the screen for foods
 export default function FoodScreen() {

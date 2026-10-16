@@ -16,23 +16,19 @@ const CustomTheme = {
   },
 };
 
-export default function TabLayout() {
+export default function RootLayout() {
   const colorScheme = useColorScheme();
   return (
     <ThemeProvider value={CustomTheme}>
       <MealsProvider>
         <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="(tabs)"
+            options={{ title: "Back", headerShown: false }}
+          />
 
-          <Stack.Screen
-            name="foods"
-            options={{ title: "Food Search", headerShown: true }}
-          />
-          <Stack.Screen
-            name="foods/[foodItemId]"
-            options={{ title: "Food Detail", headerShown: true }}
-          />
-          <Stack.Screen name="meals/[mealId]" options={{ headerShown: true }} />
+          <Stack.Screen name="foods" options={{ headerShown: false }} />
+          <Stack.Screen name="meals" options={{ headerShown: false }} />
         </Stack>
       </MealsProvider>
     </ThemeProvider>

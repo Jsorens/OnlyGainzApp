@@ -31,7 +31,7 @@ export function FoodItemCard({ data, mealType }: foodItemCardProp) {
       >
         <View style={{ padding: 15 }}>
           <Text style={{ color: "white" }}>{data.name}</Text>
-          <Text style={{ color: "white" }}>{data.calories} kcal</Text>
+          <Text style={{ color: "white" }}>{data.macros.calories} kcal</Text>
         </View>
       </Pressable>
       <Button title="Add" onPress={() => addFood(data, 1, mealType)} />

@@ -5,7 +5,7 @@ import { useLocalSearchParams } from "expo-router";
 import type { Food } from "@/Types/Meal/Food";
 import type { MealType } from "@/Types/Meal/MealType";
 import { useMeals } from "@/contexts/OnlyGainzContext";
-import ServingSize from "@/components/meal/ServingSize";
+import ServingSize from "@/components/food/ServingSize";
 
 // This represents the page for details about a certain food
 export default function foodDetail() {
@@ -34,30 +34,14 @@ export default function foodDetail() {
   // Konverterer fra string til number
   const numQuantity = Number(quantity) || 0;
 
-  const recalculateMacros = (): Food => {
-    const newCalories = data.calories * numQuantity;
-    const newCarbs = data.carbs * numQuantity;
-    const newProtein = data.protein * numQuantity;
-    const newFat = data.fat * numQuantity;
-    const newServingSize = data.servingSize * numQuantity;
-
-    return {
-      ...data,
-      calories: newCalories,
-      carbs: newCarbs,
-      protein: newProtein,
-      fat: newFat,
-      servingSize: newServingSize,
-    };
-  };
-
   console.log("Food detail rendered - ", mealId);
   return (
     <View>
       <Text>{data.name}</Text>
       <Text>
-        Kcal: {data.calories * numQuantity} | protein:
-        {data.protein * numQuantity} | carbs:{data.carbs * numQuantity}
+        Kcal: {data.macros.calories * numQuantity} | protein:
+        {data.macros.protein * numQuantity} | carbs:
+        {data.macros.carbs * numQuantity} | fat: {data.macros.fat * numQuantity}
       </Text>
       <Text>
         Serving: {data.servingSize * numQuantity} {data.servingUnit}

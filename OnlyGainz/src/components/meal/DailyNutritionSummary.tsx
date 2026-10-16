@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { type NutritionDaily } from "@/Types/Meal/NutritionDaily";
 import { config, database } from "@/lib/appwrite";
 import { useMeals } from "@/contexts/OnlyGainzContext";
+
+// Oppsummering av dagens Nutrition
 export default function DailyNutritionSummary() {
   // Vi lagrer alle states her inne
   const { getMacros } = useMeals();

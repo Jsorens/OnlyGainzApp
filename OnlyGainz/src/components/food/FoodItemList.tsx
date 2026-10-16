@@ -4,6 +4,7 @@ import type { Food } from "@/Types/Meal/Food";
 import { useEffect, useState } from "react";
 import { FoodItemCard } from "./FoodItemCard";
 import { useLocalSearchParams } from "expo-router";
+import { getFoods } from "@/api/Food";
 
 type foodItemListProp = {
   mealType: string;
@@ -18,41 +19,19 @@ export default function FoodItemList({ mealType }: foodItemListProp) {
 
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
-    // Asynkron function for fetching food data from the appwrite database
-    const getFoods = async () => {
+    const fetchFoods = async () => {
+      // Asynkron function for fetching food data from the appwrite database
       try {
-        const response = await database.listRows({
-          databaseId: config.db,
-          tableId: config.col.Foods,
-        });
-
-        //console.log("Appwrite response:", response.total);
-        //console.log("Number of foods:", response.rows.length);
-
-        // Parsing the data from the table to an array of type Food.
-
-        const foodData: Food[] = response.rows.map((food) => ({
-          id: food.$id,
-          name: food.name,
-          calories: food.calories,
-          protein: food.protein,
-          carbs: food.carbs,
-          fat: food.fat,
-          servingSize: food.servingSize,
-          servingUnit: food.servingUnit,
-        }));
-
-        // Changing the state of the component
-        setFoods(foodData);
+        const response = await getFoods();
+        setFoods(response ?? []);
       } catch (error) {
-        console.error("Failed to fetch foods", error);
+        console.log(error);
       } finally {
         setIsLoading(false);
-        console.log({ message: "Data fetched successfully!", status: 200 });
       }
     };
 
-    getFoods();
+    fetchFoods();
   }, []);
 
   if (isLoading) {
