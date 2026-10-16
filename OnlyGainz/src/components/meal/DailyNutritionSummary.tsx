@@ -5,7 +5,7 @@ import { Link, router } from "expo-router";
 import { useEffect, useState } from "react";
 import { type NutritionDaily } from "@/Types/Meal/NutritionDaily";
 import { config, database } from "@/lib/appwrite";
-import { useMeals } from "@/contexts/OnlyGainzContext";
+import { useMeals } from "@/contexts/MealsContext";
 
 // Oppsummering av dagens Nutrition
 export default function DailyNutritionSummary() {

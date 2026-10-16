@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import type { Food } from "@/Types/Meal/Food";
 import type { MealType } from "@/Types/Meal/MealType";
-import { useMeals } from "@/contexts/OnlyGainzContext";
+import { useMeals } from "@/contexts/MealsContext";
 import ServingSize from "@/components/food/ServingSize";
 
 // This represents the page for details about a certain food

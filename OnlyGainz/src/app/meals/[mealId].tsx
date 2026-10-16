@@ -5,7 +5,7 @@ import { Link, Stack, useLocalSearchParams } from "expo-router";
 import type { Food } from "@/Types/Meal/Food";
 import type { Meal } from "@/Types/Meal/Meal";
 import FoodScreen from "@/app/foods";
-import { useMeals } from "@/contexts/OnlyGainzContext";
+import { useMeals } from "@/contexts/MealsContext";
 import { router } from "expo-router";
 import { MealLog } from "@/Types/Meal/MealLog";
 export default function MealDetail() {

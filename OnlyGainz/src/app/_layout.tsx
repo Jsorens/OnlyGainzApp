@@ -3,7 +3,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { useColorScheme } from "react-native";
 import { Stack } from "expo-router";
 
-import { MealsProvider } from "@/contexts/OnlyGainzContext";
+import { MealsProvider } from "@/contexts/MealsContext";
 
 SplashScreen.preventAutoHideAsync();
 

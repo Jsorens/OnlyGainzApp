@@ -13,14 +13,14 @@ import type { Meal } from "@/Types/Meal/Meal";
 import type { Macros } from "@/Types/Meal/Macros";
 import { MealLog } from "@/Types/Meal/MealLog";
 
-type OnlyGainzContextType = {
+type MealsContextType = {
   meals: Meal[];
   addFood: (food: Food, quantity: number, mealType: string) => void;
   removeFood: (id: string, mealType: string) => void;
   getMacros: () => Macros;
 };
 
-export const OnlyGainzContext = createContext<OnlyGainzContextType | undefined>(
+export const MealsContext = createContext<MealsContextType | undefined>(
   undefined,
 );
 
@@ -119,16 +119,16 @@ export function MealsProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <OnlyGainzContext.Provider
+    <MealsContext.Provider
       value={{ meals: consumedMeals, addFood, removeFood, getMacros }}
     >
       {children}
-    </OnlyGainzContext.Provider>
+    </MealsContext.Provider>
   );
 }
 
 export function useMeals() {
-  const context = useContext(OnlyGainzContext);
+  const context = useContext(MealsContext);
 
   if (!context) {
     throw new Error("useMeals must be used within a MealsProvider");
