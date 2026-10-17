@@ -12,6 +12,7 @@ type AuthContextType = {
     session: Models.Session | null;
     loading?: boolean;
     login: ({email, password}: LoginProps) => Promise<void>;
+    logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -19,6 +20,7 @@ const AuthContext = createContext<AuthContextType>({
     session: null,
     loading: true,
     login: async () => {},
+    logout: async () => {},
 });
 
 type AuthProviderProps = {
@@ -37,7 +39,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
 
     useEffect(() => {
         init();
-    }, [])
+    }, []);
 
     const init = async () => {
         checkAuth();
@@ -46,11 +48,13 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     const checkAuth = async () => {
         try {
             const response = await account.get();
-            setUser(response);
-            const session = await account.getSession("current");
-            setSession(session);
+            if (response) {
+                setUser(response);
+                const session = await account.getSession("current");
+                setSession(session);
+            }
         } catch (error) {
-            console.log(error);
+            console.log("1: ", error);
         }
         setLoading(false);
     };
@@ -66,12 +70,20 @@ export default function AuthProvider({ children }: AuthProviderProps) {
             const responseUser = await account.get();
             setUser(responseUser);
         } catch (error) {
-            console.log(error);
+            console.log("2: ", error);
         }
         setLoading(false);
     }
 
-    const contextData = { session, user, login, };
+    const logout = async () => {
+        setLoading(true);
+        await account.deleteSession("current");
+        setSession(null);
+        setLoading(false);
+    };
+
+
+    const contextData = { session, user, login, logout };
     return (
         <AuthContext.Provider value={contextData}>
             {loading ? (

@@ -1,10 +1,20 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Pressable } from "react-native";
 import HomeIcon from "@/assets/images/svg/HomeIcon.svg";
+import { useAuth } from "@/contexts/AuthContext";
+
 export default function Home() {
+  const { user, session, logout } = useAuth();
+
   return (
     <View style={styles.container}>
+      <Pressable
+        onPress={logout}
+        >
+          <Text>Logout</Text>
+      </Pressable>
       <HomeIcon width={200} height={200} color="yellow" />
       <Text style={styles.title}>Welcome to OnlyGainz!</Text>
+      {user && session && (<Text style={styles.title}>Hello {user.name}!</Text>)}
       <Text style={styles.text}>
         OnlyGainz is a fitness app that helps you track your workouts and
         progress.
