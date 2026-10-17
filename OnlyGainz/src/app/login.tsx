@@ -1,23 +1,24 @@
 import { SafeAreaView, View,  TextInput, Text, TouchableOpacity, StyleSheet } from 'react-native'
-import {useState} from 'react'
+import { useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
-import { Redirect } from 'expo-router'
+import { Redirect, Link } from 'expo-router'
 
 
-const signin = () => {
-    const {session, login} = useAuth();
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+const login = () => {
+  const {session, login} = useAuth();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-    const handleSubmit = async () => {
-        login({email, password})
-    }
+  const handleSubmit = async () => {
+      login({email, password})
+  }
 
-    if(session) return <Redirect href="/"/>
+  if (session) return <Redirect href="/"/>
+
   return (
       <View  style={styles.container}>
         <View>
-          <Text style={styles.headline}>SignIn</Text>
+          <Text style={styles.headline}>Log In</Text>
 
           <Text>Email:</Text>
           <TextInput 
@@ -42,6 +43,7 @@ const signin = () => {
           >
             <Text style={styles.buttonText}>Login</Text>
           </TouchableOpacity>
+          <Link href="/register">Register</Link>
           </View>
       </View>
 
@@ -83,4 +85,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default signin
+export default login;

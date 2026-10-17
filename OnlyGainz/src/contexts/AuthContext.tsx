@@ -3,7 +3,7 @@ import { Text, View } from "react-native"
 import { account } from "@/lib/appwrite";
 import User from "./types/User";
 import ROLES from "./types/Role";
-import { Models } from "react-native-appwrite";
+import { Models, ID } from "react-native-appwrite";
 
 type Role = (typeof ROLES)[keyof typeof ROLES];
 
@@ -11,6 +11,7 @@ type AuthContextType = {
     user: Models.User | null;
     session: Models.Session | null;
     loading?: boolean;
+    register: ({email, password, name}: RegisterProps) => Promise<void>;
     login: ({email, password}: LoginProps) => Promise<void>;
     logout: () => Promise<void>;
 }
@@ -19,12 +20,19 @@ const AuthContext = createContext<AuthContextType>({
     user: null,
     session: null,
     loading: true,
+    register: async () => {},
     login: async () => {},
     logout: async () => {},
 });
 
 type AuthProviderProps = {
     children: React.ReactNode;
+}
+
+type RegisterProps = {
+    email: string;
+    password: string;
+    name: string;
 }
 
 type LoginProps = {
@@ -59,6 +67,22 @@ export default function AuthProvider({ children }: AuthProviderProps) {
         setLoading(false);
     };
 
+    const register = async ({ email, password, name }: RegisterProps) => {
+        setLoading(true);
+        try {
+            await account.create({
+                userId: ID.unique(),
+                email,
+                password,
+                name
+            });
+            await login({ email, password });
+        } catch (error) {
+            console.log("2: ", error)
+        }
+        setLoading(false);
+    }
+
     const login = async ({ email, password }: LoginProps) => {
         setLoading(true);
         try {
@@ -70,7 +94,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
             const responseUser = await account.get();
             setUser(responseUser);
         } catch (error) {
-            console.log("2: ", error);
+            console.log("3: ", error);
         }
         setLoading(false);
     }
@@ -83,7 +107,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     };
 
 
-    const contextData = { session, user, login, logout };
+    const contextData = { session, user, register, login, logout };
     return (
         <AuthContext.Provider value={contextData}>
             {loading ? (

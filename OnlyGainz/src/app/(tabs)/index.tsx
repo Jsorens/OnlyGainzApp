@@ -8,9 +8,10 @@ export default function Home() {
   return (
     <View style={styles.container}>
       <Pressable
+        style={styles.button}
         onPress={logout}
         >
-          <Text>Logout</Text>
+          <Text style={styles.buttonText}>Logout</Text>
       </Pressable>
       <HomeIcon width={200} height={200} color="yellow" />
       <Text style={styles.title}>Welcome to OnlyGainz!</Text>
@@ -45,4 +46,17 @@ const styles = StyleSheet.create({
   text: {
     color: "white",
   },
+  button: {
+  backgroundColor: 'black',
+  padding: 12,
+  borderRadius: 6,
+  alignItems: 'center',
+  margin:20,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 18,
+  },
 });
+
+
