@@ -9,7 +9,7 @@ export default function Profile() {
     <View style={styles.container}>
       <Text style={styles.title}>Welcome to OnlyGainz!</Text>
       <Text style={styles.text}>Profile</Text>
-      {user ? <UserProfileCard data={ user.id }/>
+      {user ? <UserProfileCard data={ user.$id }/>
       : <Text>You are not logged in</Text>}
     </View>
   );

@@ -1,5 +1,8 @@
-import { Client, TablesDB, Account } from "react-native-appwrite";
+import { Client, TablesDB, Account, Teams } from "react-native-appwrite";
 import { Platform } from "react-native";
+
+const ADMIN_TEAM_ID = '6ad7befa00225bcabd55';
+
 const config = {
   endpoint: "https://fra.cloud.appwrite.io/v1",
   projectId: "6ab950b60004906bac3e",
@@ -14,6 +17,8 @@ const client = new Client()
   .setEndpoint(config.endpoint)
   .setProject(config.projectId);
 
+const teams = new Teams(client);
+
 switch (Platform.OS) {
   case "android":
     client.setPlatform("com.onlygainz_android.app");
@@ -27,4 +32,4 @@ const database = new TablesDB(client);
 
 const account = new Account(client);
 
-export { database, config, client, account };
+export { database, config, client, account, teams, ADMIN_TEAM_ID };

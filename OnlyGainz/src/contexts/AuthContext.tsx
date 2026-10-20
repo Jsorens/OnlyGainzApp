@@ -1,16 +1,14 @@
 import { useContext, createContext, useState, useEffect } from "react";
 import { Text, View } from "react-native"
-import { account } from "@/lib/appwrite";
-import User from "./types/User";
-import ROLES from "./types/Role";
+import { account, teams } from "@/lib/appwrite";
 import { Models, ID } from "react-native-appwrite";
-
-type Role = (typeof ROLES)[keyof typeof ROLES];
+import { getIsAdmin } from "./util/get-admin";
 
 type AuthContextType = {
     user: Models.User | null;
     session: Models.Session | null;
     loading?: boolean;
+    isAdmin?: boolean;
     register: ({email, password, name}: RegisterProps) => Promise<void>;
     login: ({email, password}: LoginProps) => Promise<void>;
     logout: () => Promise<void>;
@@ -20,6 +18,7 @@ const AuthContext = createContext<AuthContextType>({
     user: null,
     session: null,
     loading: true,
+    isAdmin: false,
     register: async () => {},
     login: async () => {},
     logout: async () => {},
@@ -43,6 +42,7 @@ type LoginProps = {
 export default function AuthProvider({ children }: AuthProviderProps) {
     const [user, setUser] = useState<Models.User | null>(null);
     const [session, setSession] = useState<Models.Session | null>(null);
+    const [isAdmin, setIsAdmin] = useState(false);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -54,17 +54,20 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     };
 
     const checkAuth = async () => {
+        setLoading(true);
         try {
-            const response = await account.get();
-            if (response) {
-                setUser(response);
-                const session = await account.getSession("current");
-                setSession(session);
-            }
+            const user = await account.get();
+            const session = await account.getSession("current");
+            const admin = await getIsAdmin(session.userId);
+
+            setUser(user);
+            setSession(session);
+            setIsAdmin(admin);
         } catch (error) {
-            console.log("1: ", error);
+            console.log("checkAuth error: ", error);
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
     };
 
     const register = async ({ email, password, name }: RegisterProps) => {
@@ -78,36 +81,48 @@ export default function AuthProvider({ children }: AuthProviderProps) {
             });
             await login({ email, password });
         } catch (error) {
-            console.log("2: ", error)
+            console.log("Register error: ", error)
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
     }
 
     const login = async ({ email, password }: LoginProps) => {
         setLoading(true);
         try {
-            const responseSession = await account.createEmailPasswordSession(
+            const session = await account.createEmailPasswordSession(
                 email,
                 password
             );
-            setSession(responseSession);
-            const responseUser = await account.get();
-            setUser(responseUser);
+            const user = await account.get();
+            const admin = await getIsAdmin(session.userId);
+
+            setSession(session);
+            setUser(user);
+            setIsAdmin(admin);
         } catch (error) {
-            console.log("3: ", error);
+            console.log("Login error: ", error);
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
-    }
+    };
 
     const logout = async () => {
         setLoading(true);
-        await account.deleteSession("current");
-        setSession(null);
-        setLoading(false);
+        try {
+            await account.deleteSession("current");
+        } catch (error) {
+            console.log("Logout error: ", error);
+        } finally {
+            setSession(null);
+            setUser(null);
+            setIsAdmin(false);
+            setLoading(false);
+        }
     };
 
 
-    const contextData = { session, user, register, login, logout };
+    const contextData = { session, user, isAdmin, register, login, logout };
     return (
         <AuthContext.Provider value={contextData}>
             {loading ? (

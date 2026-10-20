@@ -1,7 +1,7 @@
-import { SafeAreaView, View,  TextInput, Text, TouchableOpacity, StyleSheet } from 'react-native'
-import { useState } from 'react'
-import { useAuth } from '@/contexts/AuthContext'
-import { Redirect, Link } from 'expo-router'
+import { SafeAreaView, View,  TextInput, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { useState } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
+import { Redirect, Link } from 'expo-router';
 
 
 const login = () => {
@@ -12,8 +12,6 @@ const login = () => {
   const handleSubmit = async () => {
       login({email, password})
   }
-
-  if (session) return <Redirect href="/"/>
 
   return (
       <View  style={styles.container}>
