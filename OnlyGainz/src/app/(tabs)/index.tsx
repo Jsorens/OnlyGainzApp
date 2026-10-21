@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, Pressable } from "react-native";
 import HomeIcon from "@/assets/images/svg/HomeIcon.svg";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/AuthProvider";
 
 export default function Home() {
   const { user, session, logout } = useAuth();

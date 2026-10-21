@@ -2,7 +2,7 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { ActivityIndicator, useColorScheme } from "react-native";
 import { Stack, useRouter, useSegments, Redirect } from "expo-router";
-import AuthProvider from "@/contexts/AuthContext";
+import AuthProvider from "@/contexts/AuthProvider";
 import { useEffect } from "react";
 
 SplashScreen.preventAutoHideAsync();

@@ -7,8 +7,8 @@ import { getIsAdmin } from "./util/get-admin";
 type AuthContextType = {
     user: Models.User | null;
     session: Models.Session | null;
-    loading?: boolean;
-    isAdmin?: boolean;
+    loading: boolean;
+    isAdmin: boolean | null;
     register: ({email, password, name}: RegisterProps) => Promise<void>;
     login: ({email, password}: LoginProps) => Promise<void>;
     logout: () => Promise<void>;
@@ -18,7 +18,7 @@ const AuthContext = createContext<AuthContextType>({
     user: null,
     session: null,
     loading: true,
-    isAdmin: false,
+    isAdmin: null,
     register: async () => {},
     login: async () => {},
     logout: async () => {},
@@ -42,7 +42,7 @@ type LoginProps = {
 export default function AuthProvider({ children }: AuthProviderProps) {
     const [user, setUser] = useState<Models.User | null>(null);
     const [session, setSession] = useState<Models.Session | null>(null);
-    const [isAdmin, setIsAdmin] = useState(false);
+    const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -58,7 +58,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
         try {
             const user = await account.get();
             const session = await account.getSession("current");
-            const admin = await getIsAdmin(session.userId);
+            const admin = await getIsAdmin(user.$id);
 
             setUser(user);
             setSession(session);
@@ -95,7 +95,8 @@ export default function AuthProvider({ children }: AuthProviderProps) {
                 password
             );
             const user = await account.get();
-            const admin = await getIsAdmin(session.userId);
+            const admin = await getIsAdmin(user.$id);
+            console.log("[AuthProvider] login: user", user.$id, "isAdmin:", admin);
 
             setSession(session);
             setUser(user);
@@ -116,22 +117,16 @@ export default function AuthProvider({ children }: AuthProviderProps) {
         } finally {
             setSession(null);
             setUser(null);
-            setIsAdmin(false);
+            setIsAdmin(null);
             setLoading(false);
         }
     };
 
 
-    const contextData = { session, user, isAdmin, register, login, logout };
+    const contextData = { session, user, isAdmin, loading, register, login, logout };
     return (
         <AuthContext.Provider value={contextData}>
-            {loading ? (
-                <View>
-                    <Text>Loading...</Text>
-                </View>
-            ) : (
-                children
-            )}
+            {children}
         </AuthContext.Provider>
     );
 };
