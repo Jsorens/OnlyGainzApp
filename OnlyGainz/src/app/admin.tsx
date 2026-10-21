@@ -1,24 +1,26 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, ActivityIndicator, Pressable } from "react-native";
 import UserProfileCard from "@/features/profile/components/UserProfileCard";
-import { useAuth } from "@/contexts/AuthContext";
-import { useRouter } from "expo-router";
-import { Pressable } from "react-native";
-import { useEffect } from "react";
+import { useAuth } from "@/contexts/AuthProvider";
+import { Redirect } from "expo-router";
 
 export default function Admin() {
-  const { user, session, isAdmin, logout } = useAuth();
-  const router = useRouter();
+  const { user, session, isAdmin, logout, loading } = useAuth();
 
-useEffect(() => {
+  if (loading || (session && isAdmin === null)) {
+    return (
+      <View>
+        <ActivityIndicator />
+      </View>
+    )
+  }
+
   if (!session) {
-    router.replace("/login");
+    return <Redirect href="/login" />;
   }
 
-  if (!isAdmin) {
-    router.replace("/");
+  if (session && isAdmin === false) {
+    return <Redirect href="/" />;
   }
-
-}, [user, session, isAdmin, router]);
   
   return (
     <View style={styles.container}>

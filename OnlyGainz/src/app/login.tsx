@@ -1,16 +1,42 @@
-import { SafeAreaView, View,  TextInput, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { ActivityIndicator, View,  TextInput, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useState } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/AuthProvider';
 import { Redirect, Link } from 'expo-router';
 
 
-const login = () => {
-  const {session, login} = useAuth();
+export default function LoginScreen() {
+  const { login, session, isAdmin, loading } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  console.log(
+    "[LoginScreen] loading:", loading,
+    "session:", session,
+    "isAdmin:", isAdmin
+  );
+
   const handleSubmit = async () => {
-      login({email, password})
+    await login({ email, password });
+  };
+
+  // While the login/checkAuth is in progress, show spinner
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator />
+      </View>
+    );
+  }
+
+  // Once we are *not* loading anymore:
+  if (session) {
+    if (isAdmin) {
+      console.log("[LoginScreen] redirecting admin to /admin");
+      return <Redirect href="/admin" />;
+    } else {
+      console.log("[LoginScreen] redirecting non-admin to /");
+      return <Redirect href="/" />;
+    }
   }
 
   return (
@@ -65,7 +91,7 @@ const styles = StyleSheet.create({
     borderWidth:1,
     borderRadius:10, 
     padding:10,
-
+    color: "white",
     marginTop:10,
     marginBottom:10,
     borderColor:"grey"
@@ -82,5 +108,3 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
 })
-
-export default login;

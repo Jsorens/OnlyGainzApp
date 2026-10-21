@@ -16,7 +16,6 @@ export async function getIsAdmin(userId: string): Promise<boolean> {
     //console.log("[getIsAdmin] result:", isAdmin);
     return isAdmin;
     } catch (e) {
-        console.log(e);
         return false;
     }
 }

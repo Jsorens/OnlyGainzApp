@@ -3,7 +3,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import * as SplashScreen from "expo-splash-screen";
 import { StyleSheet, Text, View, ActivityIndicator } from "react-native";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/AuthProvider";
 import { useEffect } from "react";
 
 SplashScreen.preventAutoHideAsync();
@@ -25,16 +25,9 @@ const tabScreenOptions = {
 const iconWidth = 24; // px
 
 export default function TabLayout() {
-  const { user, session, loading, isAdmin } = useAuth();
-  const router = useRouter();
+  const { session, loading, isAdmin } = useAuth();
   const segments = useSegments();
-
-  
-  if (!session) {
-    if (segments[0] !== "login") {
-      return <Redirect href="/login" />
-    }
-  }
+  const router = useRouter();
 
   useEffect(() => {
     if (!loading) {
@@ -42,23 +35,16 @@ export default function TabLayout() {
     }
   }, [loading]);
 
-  // Omdirigerer admin-brukere til admin området
-  useEffect(() => {
-    if (loading) return;
-
-    // sjekker om admin er allerede i admin siden
-    const inAuthGroup = segments[0] === "admin";
-
-    if (session && isAdmin && !inAuthGroup) {
-      router.replace("/admin");
-    }
-  }, [loading, session, router, segments])
-
-  // viser en laster mens autentisering lastes
+  // shows a loader while authentication is loading
   if (loading) {
     return <ActivityIndicator />;
   }
-  
+
+  // redirects unauthenticated users (guests) back to login page
+  if (!session && segments[0] !== "login") {
+      return <Redirect href="/login" />;
+  }
+
   return (
     <Tabs screenOptions={{ ...tabOptions }}>
       <Tabs.Screen
