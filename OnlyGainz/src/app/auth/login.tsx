@@ -1,4 +1,4 @@
-import { ActivityIndicator, View,  TextInput, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View,  TextInput, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthProvider';
 import { Redirect, Link } from 'expo-router';
@@ -18,26 +18,6 @@ export default function LoginScreen() {
   const handleSubmit = async () => {
     await login({ email, password });
   };
-
-  // While the login/checkAuth is in progress, show spinner
-  if (loading) {
-    return (
-      <View style={styles.container}>
-        <ActivityIndicator />
-      </View>
-    );
-  }
-
-  // Once we are *not* loading anymore:
-  if (session) {
-    if (isAdmin) {
-      console.log("[LoginScreen] redirecting admin to /admin");
-      return <Redirect href="/admin" />;
-    } else {
-      console.log("[LoginScreen] redirecting non-admin to /");
-      return <Redirect href="/" />;
-    }
-  }
 
   return (
       <View  style={styles.container}>
@@ -67,7 +47,7 @@ export default function LoginScreen() {
           >
             <Text style={styles.buttonText}>Login</Text>
           </TouchableOpacity>
-          <Link href="/register">Register</Link>
+          <Link href="/auth/register">Register</Link>
           </View>
       </View>
 

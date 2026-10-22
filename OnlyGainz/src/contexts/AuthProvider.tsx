@@ -96,7 +96,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
             );
             const user = await account.get();
             const admin = await getIsAdmin(user.$id);
-            console.log("[AuthProvider] login: user", user.$id, "isAdmin:", admin);
+            console.log("[AuthProvider] login: user:", user.$id, "isAdmin:", admin);
 
             setSession(session);
             setUser(user);

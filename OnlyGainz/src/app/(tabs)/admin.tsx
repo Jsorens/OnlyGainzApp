@@ -1,26 +1,12 @@
-import { StyleSheet, Text, View, ActivityIndicator, Pressable } from "react-native";
-import UserProfileCard from "@/features/profile/components/UserProfileCard";
-import { useAuth } from "@/contexts/AuthProvider";
+import { StyleSheet, Text, View, Pressable } from "react-native";
+import UserProfileCard from "../../features/profile/components/UserProfileCard";
+import { useAuth } from "../../contexts/AuthProvider"
 import { Redirect } from "expo-router";
 
 export default function Admin() {
   const { user, session, isAdmin, logout, loading } = useAuth();
 
-  if (loading || (session && isAdmin === null)) {
-    return (
-      <View>
-        <ActivityIndicator />
-      </View>
-    )
-  }
-
-  if (!session) {
-    return <Redirect href="/login" />;
-  }
-
-  if (session && isAdmin === false) {
-    return <Redirect href="/" />;
-  }
+  console.log("admin --> isAdmin: ", isAdmin);
   
   return (
     <View style={styles.container}>

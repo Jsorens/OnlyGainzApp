@@ -14,8 +14,6 @@ const login = () => {
       register({email, password, name})
   }
 
-  if (session) return <Redirect href="/"/>
-
   return (
       <View  style={styles.container}>
         <View>
@@ -53,7 +51,7 @@ const login = () => {
           >
             <Text style={styles.buttonText}>Register</Text>
           </TouchableOpacity>
-          <Link href="/login">Login</Link>
+          <Link href="/auth/login">Login</Link>
           </View>
       </View>
 

@@ -6,7 +6,7 @@ import { StyleSheet, Text, View, ActivityIndicator } from "react-native";
 import { useAuth } from "@/contexts/AuthProvider";
 import { useEffect } from "react";
 
-SplashScreen.preventAutoHideAsync();
+//SplashScreen.preventAutoHideAsync();
 
 const activeTintColor = "yellow";
 const inactiveTintColor = "gray";
@@ -25,25 +25,16 @@ const tabScreenOptions = {
 const iconWidth = 24; // px
 
 export default function TabLayout() {
-  const { session, loading, isAdmin } = useAuth();
+  const { session, isAdmin } = useAuth();
   const segments = useSegments();
   const router = useRouter();
-
+/*
   useEffect(() => {
     if (!loading) {
       SplashScreen.hideAsync();
     }
   }, [loading]);
-
-  // shows a loader while authentication is loading
-  if (loading) {
-    return <ActivityIndicator />;
-  }
-
-  // redirects unauthenticated users (guests) back to login page
-  if (!session && segments[0] !== "login") {
-      return <Redirect href="/login" />;
-  }
+  */
 
   return (
     <Tabs screenOptions={{ ...tabOptions }}>
@@ -113,6 +104,22 @@ export default function TabLayout() {
           ...tabScreenOptions,
         }}
       />
+      
+      <Tabs.Protected guard={!!isAdmin}>
+        <Tabs.Screen
+          name="admin"
+          options={{
+            tabBarLabel: "Admin",
+            tabBarIcon: ({ color, focused }) => (
+              <View style={styles.iconContainer}>
+                <FontAwesome name="user" size={iconWidth} color={color} />
+                {focused && <View style={styles.activeLine} />}
+              </View>
+            ),
+            ...tabScreenOptions,
+          }}
+        />
+      </Tabs.Protected>
     </Tabs>
   );
 }
