@@ -1,12 +1,13 @@
 import { useContext, createContext, useState, useEffect } from "react";
-import { Text, View } from "react-native"
-import { account, teams } from "@/lib/appwrite";
+import { AppwriteUserSchema, UserSchema, User } from "./schemas/user-schema";
+import { AppwriteSessionSchema, SessionSchema, Session } from "./schemas/session-schema";
+import { account } from "@/lib/appwrite";
 import { Models, ID } from "react-native-appwrite";
 import { getIsAdmin } from "./util/get-admin";
 
 type AuthContextType = {
-    user: Models.User | null;
-    session: Models.Session | null;
+    user: User | null;
+    session: Session | null;
     loading: boolean;
     isAdmin: boolean | null;
     register: ({email, password, name}: RegisterProps) => Promise<void>;
@@ -40,8 +41,8 @@ type LoginProps = {
 }
 
 export default function AuthProvider({ children }: AuthProviderProps) {
-    const [user, setUser] = useState<Models.User | null>(null);
-    const [session, setSession] = useState<Models.Session | null>(null);
+    const [user, setUser] = useState<User | null>(null);
+    const [session, setSession] = useState<Session | null>(null);
     const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
     const [loading, setLoading] = useState(true);
 
@@ -56,15 +57,37 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     const checkAuth = async () => {
         setLoading(true);
         try {
-            const user = await account.get();
-            const session = await account.getSession("current");
-            const admin = await getIsAdmin(user.$id);
+            const rawSession = await account.getSession("current");
+            const rawUser = await account.get();
 
-            setUser(user);
-            setSession(session);
+            const sessionResult = AppwriteSessionSchema.safeParse(rawSession);
+            const userResult = AppwriteUserSchema.safeParse(rawUser);
+
+
+            if (!sessionResult.success || !userResult.success) {
+                console.log("Zod validation failed ", {
+                    userError: userResult.success ? null : userResult.error,
+                    sessionErrorFromCheckAuth: sessionResult.success ? null : sessionResult.error,
+                });
+                setSession(null);
+                setUser(null);
+                setIsAdmin(null);
+                return;
+            }
+
+            const parsedSession = SessionSchema.parse(sessionResult.data);
+            const parsedUser = UserSchema.parse(userResult.data);
+
+            const admin = await getIsAdmin(parsedUser.$id);
+
+            setSession(parsedSession);
+            setUser(parsedUser);
             setIsAdmin(admin);
         } catch (error) {
             console.log("checkAuth error: ", error);
+            setSession(null);
+            setUser(null);
+            setIsAdmin(null);
         } finally {
             setLoading(false);
         }
@@ -90,16 +113,30 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     const login = async ({ email, password }: LoginProps) => {
         setLoading(true);
         try {
-            const session = await account.createEmailPasswordSession(
+            const rawSession = await account.createEmailPasswordSession(
                 email,
                 password
             );
-            const user = await account.get();
-            const admin = await getIsAdmin(user.$id);
-            console.log("[AuthProvider] login: user:", user.$id, "isAdmin:", admin);
+            const rawUser = await account.get();
 
-            setSession(session);
-            setUser(user);
+            const sessionResult = AppwriteSessionSchema.safeParse(rawSession);
+            const userResult = AppwriteUserSchema.safeParse(rawUser);
+
+            if (!sessionResult.success || !userResult.success) {
+                console.log("Zod validation failed on login", {
+                    sessionError: sessionResult.success ? null : sessionResult.error,
+                    userError: userResult.success ? null : userResult.error,
+                })
+                return;
+            }
+
+            const parsedSession = SessionSchema.parse(sessionResult.data);
+            const parsedUser = UserSchema.parse(userResult.data);
+
+            const admin = await getIsAdmin(parsedUser.$id);
+
+            setSession(parsedSession);
+            setUser(parsedUser);
             setIsAdmin(admin);
         } catch (error) {
             console.log("Login error: ", error);

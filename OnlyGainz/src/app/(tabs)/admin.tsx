@@ -6,7 +6,10 @@ import { Redirect } from "expo-router";
 export default function Admin() {
   const { user, session, isAdmin, logout, loading } = useAuth();
 
+  if (loading) return null;
+
   console.log("admin --> isAdmin: ", isAdmin);
+  console.log("admin --> user: ", user)
   
   return (
     <View style={styles.container}>
