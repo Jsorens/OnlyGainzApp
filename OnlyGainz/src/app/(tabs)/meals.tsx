@@ -12,23 +12,40 @@ import MealCardList from "@/components/meal/MealCardList";
 import DailyNutritionSummary from "@/components/meal/DailyNutritionSummary";
 
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import { useMeals } from "@/contexts/MealsContext";
+//import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 
 export default function Meals() {
   const [calendarOpen, setCalendarOpen] = useState(false);
-  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const { date: selectedDate, setDate: setSelectedDate } = useMeals();
+  console.log("Selected date:", selectedDate);
+
   console.log("Meals rendered");
   return (
     <View style={styles.container}>
+      <Text style={styles.text}>
+        Selected date: {selectedDate?.toDateString()}
+      </Text>
       <ScrollView>
         <Pressable onPress={() => setCalendarOpen(!calendarOpen)}>
           <FontAwesome name="calendar" size={50} color={"yellow"} />
         </Pressable>
+
+        <Pressable
+          onPress={() =>
+            setSelectedDate(
+              new Date(selectedDate.setDate(selectedDate.getDate() - 1)),
+            )
+          }
+        >
+          <Text style={styles.iconButton} aria-label="Forrige dag">
+            Previous Day
+          </Text>
+        </Pressable>
         {calendarOpen && (
           <Calendar
             onDayPress={(day) => {
-              console.log("Selected date:", day.dateString);
-              setSelectedDate(day.dateString);
+              setSelectedDate(new Date(day.dateString));
             }}
             style={{ backgroundColor: "black" }}
             theme={{
@@ -41,7 +58,17 @@ export default function Meals() {
             }}
           />
         )}
-
+        <Pressable
+          onPress={() =>
+            setSelectedDate(
+              new Date(selectedDate.setDate(selectedDate.getDate() + 1)),
+            )
+          }
+        >
+          <Text style={styles.iconButton} aria-label="Neste dag">
+            Next Day
+          </Text>
+        </Pressable>
         <Text style={styles.title}>Welcome to OnlyGainz!</Text>
         <DailyNutritionSummary />
         <MealCardList />
@@ -51,6 +78,11 @@ export default function Meals() {
 }
 
 const styles = StyleSheet.create({
+  iconButton: {
+    color: "yellow",
+    fontSize: 18,
+    marginVertical: 10,
+  },
   container: {
     flex: 1,
     justifyContent: "center",

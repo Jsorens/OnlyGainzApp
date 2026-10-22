@@ -3,7 +3,6 @@ import { View, Text, Pressable, Button, ScrollView } from "react-native";
 import { useEffect, useReducer, useState } from "react";
 import { Link, Stack, useLocalSearchParams } from "expo-router";
 import type { Food } from "@/Types/Meal/Food";
-import type { Meal } from "@/Types/Meal/Meal";
 import FoodScreen from "@/app/foods";
 import { useMeals } from "@/contexts/MealsContext";
 import { router } from "expo-router";
@@ -12,18 +11,19 @@ export default function MealDetail() {
   const { mealId } = useLocalSearchParams<{
     mealId: string;
   }>();
-  const { meals, removeFood } = useMeals();
+  const { getMeals, removeFood } = useMeals();
   // Tilstanden for måltid som er her
   const [, setTick] = useState(0);
 
-  const mealByType: Meal[] = meals.filter((meal) => meal.type === mealId);
-  // Hent alle matvarene fra måltidene med riktig type
-  const loggedFoods: MealLog[] = mealByType.flatMap((meal) => meal.foods);
+  const { date: selectedDate } = useMeals();
+  if (!selectedDate) return false;
+
+  const loggedFoods = getMeals(mealId, selectedDate);
 
   console.log("Rendered", mealId, "Page");
 
-  const handleRemove = (id: string, mealType: string) => {
-    removeFood(id, mealType);
+  const handleRemove = (id: string) => {
+    removeFood(id);
     setTick((ticket) => ticket + 1);
   };
 
@@ -45,10 +45,7 @@ export default function MealDetail() {
               Serving: {log.foodItem.servingSize * log.quantity}{" "}
               {log.foodItem.servingUnit}
             </Text>
-            <Button
-              title="Remove"
-              onPress={() => handleRemove(log.id, mealId)}
-            />
+            <Button title="Remove" onPress={() => handleRemove(log.id)} />
             <Button
               title="Edit"
               onPress={() =>
