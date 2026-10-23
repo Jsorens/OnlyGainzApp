@@ -1,11 +1,23 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Pressable } from "react-native";
 import HomeIcon from "@/assets/images/svg/HomeIcon.svg";
 import DailyNutritionSummary from "@/components/meal/DailyNutritionSummary";
+import { useAuth } from "@/contexts/AuthProvider";
+
 export default function Home() {
+  const { user, session, logout } = useAuth();
+
   return (
     <View style={styles.container}>
+      <Pressable
+        style={styles.button}
+        onPress={logout}
+        >
+          <Text style={styles.buttonText}>Logout</Text>
+      </Pressable>
       <HomeIcon width={200} height={200} color="yellow" />
       <Text style={styles.title}>Welcome to OnlyGainz!</Text>
+
+      {user && session && (<Text style={styles.title}>Hello {user.name}!</Text>)}
 
       <DailyNutritionSummary />
 
@@ -38,5 +50,16 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "white",
+  },
+  button: {
+  backgroundColor: 'black',
+  padding: 12,
+  borderRadius: 6,
+  alignItems: 'center',
+  margin:20,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 18,
   },
 });

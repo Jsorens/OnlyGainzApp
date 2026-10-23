@@ -1,7 +1,12 @@
-import { Tabs } from "expo-router";
+import { Tabs, Redirect, useRouter, useSegments } from "expo-router";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-import { StyleSheet, Text, View } from "react-native";
+import * as SplashScreen from "expo-splash-screen";
+import { StyleSheet, Text, View, ActivityIndicator } from "react-native";
+import { useAuth } from "@/contexts/AuthProvider";
+import { useEffect } from "react";
+
+//SplashScreen.preventAutoHideAsync();
 
 const activeTintColor = "yellow";
 const inactiveTintColor = "gray";
@@ -20,6 +25,17 @@ const tabScreenOptions = {
 const iconWidth = 24; // px
 
 export default function TabLayout() {
+  const { session, isAdmin } = useAuth();
+  const segments = useSegments();
+  const router = useRouter();
+/*
+  useEffect(() => {
+    if (!loading) {
+      SplashScreen.hideAsync();
+    }
+  }, [loading]);
+  */
+
   return (
     <Tabs screenOptions={{ ...tabOptions }}>
       <Tabs.Screen
@@ -89,9 +105,26 @@ export default function TabLayout() {
           ...tabScreenOptions,
         }}
       />
+      
+      <Tabs.Protected guard={!!isAdmin}>
+        <Tabs.Screen
+          name="admin"
+          options={{
+            tabBarLabel: "Admin",
+            tabBarIcon: ({ color, focused }) => (
+              <View style={styles.iconContainer}>
+                <FontAwesome name="user" size={iconWidth} color={color} />
+                {focused && <View style={styles.activeLine} />}
+              </View>
+            ),
+            ...tabScreenOptions,
+          }}
+        />
+      </Tabs.Protected>
     </Tabs>
   );
 }
+
 const styles = StyleSheet.create({
   iconContainer: {
     alignItems: "center",
