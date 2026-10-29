@@ -1,5 +1,5 @@
 // This represents a single food item.
-import { View, Text, Button, TextInput } from "react-native";
+import { View, SafeAreaView, Text, Button, TextInput } from "react-native";
 import { useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import type { Food } from "@/Types/Meal/Food";
@@ -36,7 +36,7 @@ export default function foodDetail() {
 
   console.log("Food detail rendered - ", mealId);
   return (
-    <View>
+    <SafeAreaView>
       <Text>{data.name}</Text>
       <Text>
         Kcal: {data.macros.calories * numQuantity} | protein:
@@ -60,6 +60,6 @@ export default function foodDetail() {
           }
         }}
       />
-    </View>
+    </SafeAreaView>
   );
 }

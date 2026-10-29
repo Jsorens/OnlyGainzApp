@@ -1,5 +1,12 @@
 // This represents a single food item.
-import { View, Text, Pressable, Button, ScrollView } from "react-native";
+import {
+  View,
+  SafeAreaView,
+  Text,
+  Pressable,
+  Button,
+  ScrollView,
+} from "react-native";
 import { useEffect, useReducer, useState } from "react";
 import { Link, Stack, useLocalSearchParams } from "expo-router";
 import type { Food } from "@/Types/Meal/Food";
@@ -28,7 +35,7 @@ export default function MealDetail() {
   };
 
   return (
-    <View>
+    <SafeAreaView>
       <Stack.Screen options={{ title: mealId }} />
       <ScrollView>
         {loggedFoods.map((log, index) => (
@@ -62,6 +69,6 @@ export default function MealDetail() {
         ))}
       </ScrollView>
       <Text>Her skal maten fra {mealId} vises </Text>
-    </View>
+    </SafeAreaView>
   );
 }

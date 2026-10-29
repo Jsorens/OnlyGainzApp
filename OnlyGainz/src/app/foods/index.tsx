@@ -10,10 +10,10 @@ export default function FoodScreen() {
   }>();
   console.log("FoodScreen rendered - ", mealId);
   return (
-    <View>
+    <SafeAreaView>
       <CameraButton />
       <TextInput />
       <FoodItemList mealType={mealId} />
-    </View>
+    </SafeAreaView>
   );
 }
