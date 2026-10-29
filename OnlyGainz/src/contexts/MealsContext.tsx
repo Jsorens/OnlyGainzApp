@@ -90,7 +90,7 @@ export function MealsProvider({ children }: { children: ReactNode }) {
       id: randomId,
       quantity: quantity,
       foodItem: food,
-      date: new Date(),
+      date: new Date(selectedDate ?? new Date()),
       type: mealType,
     };
 
