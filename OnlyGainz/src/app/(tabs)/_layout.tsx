@@ -28,7 +28,7 @@ export default function TabLayout() {
   const { session, isAdmin } = useAuth();
   const segments = useSegments();
   const router = useRouter();
-/*
+  /*
   useEffect(() => {
     if (!loading) {
       SplashScreen.hideAsync();
@@ -105,7 +105,7 @@ export default function TabLayout() {
           ...tabScreenOptions,
         }}
       />
-      
+
       <Tabs.Protected guard={!!isAdmin}>
         <Tabs.Screen
           name="admin"

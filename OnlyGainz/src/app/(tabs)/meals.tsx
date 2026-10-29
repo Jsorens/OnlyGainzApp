@@ -34,7 +34,11 @@ export default function Meals() {
         <Pressable
           onPress={() =>
             setSelectedDate(
-              new Date(selectedDate.setDate(selectedDate.getDate() - 1)),
+              new Date(
+                selectedDate
+                  ? selectedDate.setDate(selectedDate.getDate() - 1)
+                  : new Date(),
+              ),
             )
           }
         >
@@ -61,7 +65,11 @@ export default function Meals() {
         <Pressable
           onPress={() =>
             setSelectedDate(
-              new Date(selectedDate.setDate(selectedDate.getDate() + 1)),
+              new Date(
+                selectedDate
+                  ? selectedDate.setDate(selectedDate.getDate() + 1)
+                  : new Date(),
+              ),
             )
           }
         >
