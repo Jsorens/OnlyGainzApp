@@ -9,15 +9,17 @@ import {
 } from "react";
 
 import type { Food } from "@/Types/Meal/Food";
-import type { Meal } from "@/Types/Meal/Meal";
 import type { Macros } from "@/Types/Meal/Macros";
 import { MealLog } from "@/Types/Meal/MealLog";
 
 type MealsContextType = {
-  meals: Meal[];
+  meals: MealLog[];
+  date: Date | null;
   addFood: (food: Food, quantity: number, mealType: string) => void;
-  removeFood: (id: string, mealType: string) => void;
+  removeFood: (id: string) => void;
   getMacros: () => Macros;
+  getMeals: (mealType: string, selectedDate: Date) => MealLog[];
+  setDate: (date: Date | null) => void;
 };
 
 export const MealsContext = createContext<MealsContextType | undefined>(
@@ -26,7 +28,8 @@ export const MealsContext = createContext<MealsContextType | undefined>(
 
 export function MealsProvider({ children }: { children: ReactNode }) {
   // Holder på state og funksjonene
-  const [consumedMeals, setConsumedMeals] = useState<Meal[]>([]);
+  const [consumedMeals, setConsumedMeals] = useState<MealLog[]>([]);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
   const [macros, setMacros] = useState<Macros>({
     calories: 0,
     carbs: 0,
@@ -39,31 +42,27 @@ export function MealsProvider({ children }: { children: ReactNode }) {
   // Kjøres for hver rerender, vi lener oss på rerender.
   useEffect(() => {
     const totals = consumedMeals.reduce(
-      (total, meal) => {
-        meal.foods.forEach((log) => {
-          total.calories += log.foodItem.macros.calories;
-          total.carbs += log.foodItem.macros.carbs;
-          total.protein += log.foodItem.macros.protein;
-          total.fat += log.foodItem.macros.fat;
-        });
-
+      (total, meal: MealLog) => {
+        total.calories += meal.foodItem.macros.calories * meal.quantity;
+        total.carbs += meal.foodItem.macros.carbs * meal.quantity;
+        total.protein += meal.foodItem.macros.protein * meal.quantity;
+        total.fat += meal.foodItem.macros.fat * meal.quantity;
         return total;
       },
       { calories: 0, carbs: 0, protein: 0, fat: 0 },
     );
-
     setMacros(totals);
   }, [consumedMeals]);
 
-  function getMacros(): Macros {
+  function getMacros(date: Date): Macros {
     return consumedMeals.reduce(
-      (total, meal) => {
-        meal.foods.forEach((log) => {
-          total.calories += log.foodItem.macros.calories * log.quantity;
-          total.carbs += log.foodItem.macros.carbs * log.quantity;
-          total.protein += log.foodItem.macros.protein * log.quantity;
-          total.fat += log.foodItem.macros.fat * log.quantity;
-        });
+      (total, meal: MealLog) => {
+        if (meal.date.toDateString() === date.toDateString()) {
+          total.calories += meal.foodItem.macros.calories * meal.quantity;
+          total.carbs += meal.foodItem.macros.carbs * meal.quantity;
+          total.protein += meal.foodItem.macros.protein * meal.quantity;
+          total.fat += meal.foodItem.macros.fat * meal.quantity;
+        }
         return total;
       },
       {
@@ -83,7 +82,7 @@ export function MealsProvider({ children }: { children: ReactNode }) {
     do {
       randomId = Math.floor(1000000000 + Math.random() * 9000000000).toString();
       exists = consumedMeals.some((meal) => {
-        meal.foods.some((log) => log.id === randomId);
+        return meal.foodItem.id === randomId;
       });
     } while (exists);
 
@@ -91,36 +90,45 @@ export function MealsProvider({ children }: { children: ReactNode }) {
       id: randomId,
       quantity: quantity,
       foodItem: food,
+      date: new Date(selectedDate ?? new Date()),
+      type: mealType,
     };
 
-    setConsumedMeals((previous) => [
+    setConsumedMeals((previous: MealLog[]) => [
       ...previous,
       {
-        type: mealType,
-        foods: [result],
+        ...result,
       },
     ]);
   }
 
   // Funksjon for å fjerne måltid
-  function removeFood(id: string, mealType: string) {
+  function removeFood(id: string) {
     setConsumedMeals((previousMeals) =>
-      previousMeals.map((meal) => {
-        if (meal.type !== mealType) {
-          return meal;
-        }
-
-        return {
-          ...meal,
-          foods: meal.foods.filter((log) => log.id !== id),
-        };
-      }),
+      previousMeals.filter((meal) => meal.id !== id),
     );
   }
 
+  function getMeals(mealType: string, selectedDate: Date): MealLog[] {
+    if (!selectedDate) throw new Error("No date provided");
+
+    return consumedMeals.filter(
+      (meal) =>
+        meal.type === mealType &&
+        meal.date.toDateString() === selectedDate.toDateString(),
+    );
+  }
   return (
     <MealsContext.Provider
-      value={{ meals: consumedMeals, addFood, removeFood, getMacros }}
+      value={{
+        meals: consumedMeals,
+        date: selectedDate,
+        addFood,
+        removeFood,
+        getMacros: () => getMacros(selectedDate ?? new Date()),
+        getMeals,
+        setDate: setSelectedDate,
+      }}
     >
       {children}
     </MealsContext.Provider>
