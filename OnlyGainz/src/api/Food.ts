@@ -1,8 +1,11 @@
 import { config, database } from "@/lib/appwrite";
 import { Food } from "@/Types/Meal/Food";
 
+// Dette enedepunket er en ai-generert nettside for å hente matdata fra OnlyGainz API og brukes til å hente informasjon om matvarer.
+// URI for OnlyGainz API endpoint for foods.
+const URI = "https://onlygainz.onlygainzapp.workers.dev/api/v1/foods";
 // Asynkron function for fetching food data from the appwrite database
-export async function getFoods(): Promise<Food[] | undefined> {
+export async function getFoodsAppwrite(): Promise<Food[] | undefined> {
   try {
     const response = await database.listRows({
       databaseId: config.db,
@@ -35,4 +38,37 @@ export async function getFoods(): Promise<Food[] | undefined> {
   } finally {
     console.log({ message: "Data fetched successfully!", status: 200 });
   }
+}
+
+export async function getFoodsAPI(): Promise<Food[] | undefined> {
+  const res = await fetch(URI, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (!res.ok) {
+    throw new Error("Failed to fetch foods from API");
+  }
+
+  const result = await res.json();
+
+  const data: Food[] = result.data.map((food: any) => ({
+    id: food.id,
+    name: food.name,
+    macros: {
+      calories: food.caloriesPer100g,
+      protein: Math.round(food.proteinPer100g * 10) / 10,
+      carbs: Math.round(food.carbsPer100g * 10) / 10,
+      fat: Math.round(food.fatPer100g * 10) / 10,
+    },
+    servingSize: 100,
+    servingUnit: "g",
+  }));
+
+  if (!data) {
+    throw new Error("Kunne ikke hente matvarer");
+  }
+
+  return data || [];
 }

@@ -39,9 +39,11 @@ export default function foodDetail() {
     <SafeAreaView>
       <Text>{data.name}</Text>
       <Text>
-        Kcal: {data.macros.calories * numQuantity} | protein:
-        {data.macros.protein * numQuantity} | carbs:
-        {data.macros.carbs * numQuantity} | fat: {data.macros.fat * numQuantity}
+        Kcal: {Math.round(data.macros.calories * numQuantity * 10) / 10} |
+        protein:
+        {Math.round(data.macros.protein * numQuantity * 10) / 10} | carbs:
+        {Math.round(data.macros.carbs * numQuantity * 10) / 10} | fat:{" "}
+        {Math.round(data.macros.fat * numQuantity * 10) / 10}
       </Text>
       <Text>
         Serving: {data.servingSize * numQuantity} {data.servingUnit}

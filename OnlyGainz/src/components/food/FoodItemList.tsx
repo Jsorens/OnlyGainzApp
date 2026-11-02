@@ -4,13 +4,14 @@ import type { Food } from "@/Types/Meal/Food";
 import { useEffect, useState } from "react";
 import { FoodItemCard } from "./FoodItemCard";
 import { useLocalSearchParams } from "expo-router";
-import { getFoods } from "@/api/Food";
+import { getFoodsAppwrite, getFoodsAPI } from "@/api/Food";
 
 type foodItemListProp = {
   mealType: string;
 };
 // This is just a basic test for displaying the food in the database.
 export default function FoodItemList({ mealType }: foodItemListProp) {
+  const fetchMethod = getFoodsAPI;
   // We check if the food item is rendered
   console.log("Food item list rendered - ", mealType);
 
@@ -22,7 +23,7 @@ export default function FoodItemList({ mealType }: foodItemListProp) {
     const fetchFoods = async () => {
       // Asynkron function for fetching food data from the appwrite database
       try {
-        const response = await getFoods();
+        const response = await fetchMethod();
         setFoods(response ?? []);
       } catch (error) {
         console.log(error);

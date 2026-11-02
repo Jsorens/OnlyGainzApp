@@ -47,7 +47,12 @@ export function MealsProvider({ children }: { children: ReactNode }) {
         total.carbs += meal.foodItem.macros.carbs * meal.quantity;
         total.protein += meal.foodItem.macros.protein * meal.quantity;
         total.fat += meal.foodItem.macros.fat * meal.quantity;
-        return total;
+        return {
+          calories: Math.round(total.calories * 10) / 10,
+          carbs: Math.round(total.carbs * 10) / 10,
+          protein: Math.round(total.protein * 10) / 10,
+          fat: Math.round(total.fat * 10) / 10,
+        };
       },
       { calories: 0, carbs: 0, protein: 0, fat: 0 },
     );
@@ -63,7 +68,13 @@ export function MealsProvider({ children }: { children: ReactNode }) {
           total.protein += meal.foodItem.macros.protein * meal.quantity;
           total.fat += meal.foodItem.macros.fat * meal.quantity;
         }
-        return total;
+        // Runder først til slutt, slik at vi unngår avrundingsfeil underveis
+        return {
+          calories: Math.round(total.calories * 10) / 10,
+          carbs: Math.round(total.carbs * 10) / 10,
+          protein: Math.round(total.protein * 10) / 10,
+          fat: Math.round(total.fat * 10) / 10,
+        };
       },
       {
         calories: 0,
