@@ -1,6 +1,6 @@
 import { View, Text, Pressable, StyleSheet, TextInput } from "react-native";
-import React, { useEffect, useState } from "react";
-import { profileRepository, ProfileRepository } from "@/api/profile";
+import { useEffect, useState } from "react";
+import { profileRepository } from "@/features/profile/api/profile-api";
 import { Profile } from "../types/Profile";
 import { useAuth } from "@/features/contexts/AuthProvider";
 

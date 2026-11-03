@@ -8,7 +8,7 @@ import {
   type ReactNode,
 } from "react";
 
-import { useMealsAPI } from "@/api/meals-api";
+import { useMealsAPI } from "@/features/meal/api/meals-api";
 import { useAuth } from "@/features/contexts/AuthProvider";
 import type { Food } from "@/features/food/types/Food";
 import type { Macros } from "@/features/food/types/Macros";

@@ -4,7 +4,7 @@ import type { Food } from "@/features/food/types/Food";
 import { useLocalSearchParams } from "expo-router";
 import CameraButton from "@/features/food/components/Camera";
 import { SearchField } from "@/features/food/components/SearchField";
-import { getFoodsAPI } from "@/api/foods-api";
+import { getFoodsAPI } from "@/features/food/api/foods-api";
 import { useState, useEffect } from "react";
 
 // This represents the screen for foods
