@@ -14,6 +14,15 @@ export default function EditMealScreen() {
   }>();
   console.log(mealLog);
 
+  const [buttonPressed, setButtonPressed] = useState(false);
+
+  const handleSave = () => {
+    setButtonPressed(true);
+    setTimeout(() => {
+      editFood(data, numQuantity);
+      setButtonPressed(false);
+    }, 1000);
+  };
   const { editFood } = useMeals();
   let data: MealLog;
   if (!mealLog) {
@@ -72,7 +81,7 @@ export default function EditMealScreen() {
       <Text style={styles.label}>QUANTITY</Text>
       <ServingSize amount={quantity} setAmount={setQuantity} />
       <Pressable
-        onPress={() => editFood(data, numQuantity)}
+        onPress={handleSave}
         style={({ pressed }) => [
           styles.addButton,
           pressed && styles.editButtonPressed,
@@ -84,6 +93,11 @@ export default function EditMealScreen() {
           </Text>
         )}
       </Pressable>
+      {buttonPressed && (
+        <Text style={{ color: "#ffff00", marginTop: 10 }}>
+          Saving Changes...
+        </Text>
+      )}
     </SafeAreaView>
   );
 }

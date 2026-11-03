@@ -1,4 +1,12 @@
-import { View, Text, Pressable, Button, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  Pressable,
+  Button,
+  StyleSheet,
+  Vibration,
+} from "react-native";
+import { useState } from "react";
 import type { Food } from "@/features/food/types/Food";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Link, router } from "expo-router";
@@ -15,6 +23,15 @@ type foodItemCardProp = {
 export function FoodItemCard({ data, mealType }: foodItemCardProp) {
   const router = useRouter();
   const { addFood } = useMeals();
+
+  const [buttonPressed, setButtonPressed] = useState(false);
+  const handleAddFood = () => {
+    addFood(data, 1, mealType);
+    Vibration.vibrate(50);
+    // Set the button as pressed to trigger visual feedback for a short duration
+    setButtonPressed(true);
+    setTimeout(() => setButtonPressed(false), 600);
+  };
   return (
     <View style={styles.card}>
       <Pressable
@@ -38,6 +55,12 @@ export function FoodItemCard({ data, mealType }: foodItemCardProp) {
         <Text style={styles.kcal}>{data.macros.protein} g protein</Text>
         <Text style={styles.kcal}>{data.macros.carbs} g carbs</Text>
         <Text style={styles.kcal}>{data.macros.fat} g fat</Text>
+
+        {buttonPressed && (
+          <Text style={{ color: "#FFC21A", marginLeft: 10 }}>
+            Added to {mealType}
+          </Text>
+        )}
       </Pressable>
 
       <Pressable
@@ -45,7 +68,9 @@ export function FoodItemCard({ data, mealType }: foodItemCardProp) {
           styles.addButton,
           pressed && styles.addButtonPressed,
         ]}
-        onPress={() => addFood(data, 1, mealType)}
+        onPress={() => {
+          handleAddFood();
+        }}
       >
         {({ pressed }) => (
           <Text style={[styles.addText, pressed && styles.addTextPressed]}>

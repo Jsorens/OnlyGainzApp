@@ -7,6 +7,7 @@ import {
   Button,
   ScrollView,
   StyleSheet,
+  Vibration,
 } from "react-native";
 import { useEffect, useReducer, useState } from "react";
 import { Link, Stack, useLocalSearchParams } from "expo-router";
@@ -16,12 +17,14 @@ import FoodScreen from "@/app/foods";
 import { useMeals } from "@/features/contexts/MealsContext";
 import { router } from "expo-router";
 // import { MealLog } from "@/Types/Meal/MealLog";
+
 export default function MealDetail() {
   const { mealId } = useLocalSearchParams<{
     mealId: string;
   }>();
   const { getMeals, removeFood } = useMeals();
   // Tilstanden for måltid som er her
+  const [buttonPressed, setButtonPressed] = useState(false);
 
   const round1 = (n: number) => Math.round(n * 10) / 10;
 
@@ -33,7 +36,13 @@ export default function MealDetail() {
   console.log("Rendered", mealId, "Page");
 
   const handleRemove = (id: string) => {
-    removeFood(id);
+    Vibration.vibrate(50);
+    setButtonPressed(true);
+    setTimeout(() => {
+      // This timeout is used to provide a short delay for visual feedback after removing a food item
+      setButtonPressed(false);
+      removeFood(id);
+    }, 1000);
   };
 
   useEffect(() => {}, [mealId, selectedDate]);
@@ -125,6 +134,12 @@ export default function MealDetail() {
                 )}
               </Pressable>
             </View>
+
+            {buttonPressed && (
+              <Text style={{ color: "#ff1a1a", marginTop: 10 }}>
+                Removing {log.foodItem.name} from {mealId}...
+              </Text>
+            )}
           </View>
         ))}
 

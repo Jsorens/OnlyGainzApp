@@ -7,6 +7,7 @@ import {
   TextInput,
   Pressable,
   StyleSheet,
+  Vibration,
 } from "react-native";
 import { useState } from "react";
 import { useLocalSearchParams } from "expo-router";
@@ -23,7 +24,19 @@ export default function foodDetail() {
   }>();
 
   const { addFood } = useMeals();
+  const [buttonPressed, setButtonPressed] = useState(false);
 
+  const handleAdd = () => {
+    Vibration.vibrate(50);
+    setButtonPressed(true);
+    setTimeout(() => {
+      if (typeof mealId === "string") {
+        addFood(data, numQuantity, mealId);
+        console.log("Legger til matvare", data.name, "til", mealId);
+      }
+      setButtonPressed(false);
+    }, 1000);
+  };
   if (!foodItemData) {
     return <Text>Food data not found</Text>;
   }
@@ -88,12 +101,7 @@ export default function foodDetail() {
             styles.addButton,
             pressed && styles.addButtonPressed,
           ]}
-          onPress={() => {
-            if (typeof mealId === "string") {
-              addFood(data, numQuantity, mealId);
-              console.log("Legger til matvare", data.name, "til", mealId);
-            }
-          }}
+          onPress={handleAdd}
         >
           {({ pressed }) => (
             <Text style={[styles.addText, pressed && styles.addTextPressed]}>
@@ -101,6 +109,12 @@ export default function foodDetail() {
             </Text>
           )}
         </Pressable>
+
+        {buttonPressed && (
+          <Text style={{ color: "#ffff00", marginTop: 10 }}>
+            Adding {data.name} to {mealId}...
+          </Text>
+        )}
       </View>
     </SafeAreaView>
   );
