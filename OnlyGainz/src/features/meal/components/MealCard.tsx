@@ -1,22 +1,19 @@
-import { useEffect, useState } from "react";
-import { Link, useRouter } from "expo-router";
-//import FoodLayout from "./FoodLayout";
-import { Pressable, View, Text, Button } from "react-native";
-import { StyleSheet } from "react-native";
-import type { Food } from "@/features/food/types/Food";
-// We want to be able to press the mealcard
-// When the mealcard is press we wish to enter another "tab"/component
+import { useRouter } from "expo-router";
+import { Pressable, View, Text, StyleSheet } from "react-native";
 
 type mealCardProps = {
   mealType: string;
 };
+
+// Måltidskort
+// Trykk på kortet åpner måltidet, trykk på "+ ADD FOOD" åpner matlisten
 export default function MealCard({ mealType }: mealCardProps) {
-  // Vi lager en state for å lagre data om mat som er spist i dette måltidet
   const router = useRouter();
 
   return (
-    <View>
+    <View style={styles.card}>
       <Pressable
+        style={({ pressed }) => [styles.header, pressed && styles.pressed]}
         onPress={() =>
           router.push({
             pathname: "/meals/[mealId]",
@@ -24,36 +21,79 @@ export default function MealCard({ mealType }: mealCardProps) {
           })
         }
       >
-        <View style={{ padding: 15 }}>
-          <Text style={{ color: "white" }}>{mealType}</Text>
-        </View>
+        {({ pressed }) => (
+          <>
+            <Text style={[styles.title, pressed && styles.textPressed]}>
+              {mealType}
+            </Text>
+            <Text style={[styles.arrow, pressed && styles.textPressed]}>›</Text>
+          </>
+        )}
       </Pressable>
-      <Button
-        title="Add Food"
+
+      <Pressable
+        style={({ pressed }) => [styles.addButton, pressed && styles.pressed]}
         onPress={() =>
           router.push({
             pathname: "/foods",
             params: { mealId: mealType },
           })
         }
-      />
+      >
+        {({ pressed }) => (
+          <Text style={[styles.addText, pressed && styles.textPressed]}>
+            + ADD FOOD
+          </Text>
+        )}
+      </Pressable>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    padding: 24,
+  card: {
+    backgroundColor: "#11140D",
+    borderWidth: 1,
+    borderColor: "#FFC21A",
+    marginHorizontal: 12,
+    marginVertical: 8,
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 16,
+    paddingHorizontal: 14,
   },
   title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 12,
-    color: "white",
+    color: "#FFC21A",
+    fontFamily: "monospace",
+    fontSize: 17,
+    fontWeight: "700",
+    letterSpacing: 2,
+    textTransform: "uppercase",
   },
-  text: {
-    color: "white",
+  arrow: {
+    color: "#8A8466",
+    fontFamily: "monospace",
+    fontSize: 22,
+  },
+  addButton: {
+    borderTopWidth: 1,
+    borderTopColor: "#FFC21A",
+    paddingVertical: 12,
+    alignItems: "center",
+  },
+  addText: {
+    color: "#FFC21A",
+    fontFamily: "monospace",
+    fontWeight: "700",
+    letterSpacing: 2,
+  },
+  pressed: {
+    backgroundColor: "#FFC21A",
+  },
+  textPressed: {
+    color: "#0A0C08",
   },
 });

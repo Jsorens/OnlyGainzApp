@@ -25,10 +25,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 16,
     padding: 24,
-    borderWidth: 1,
-    borderColor: "#FFC21A",
-    borderRadius: 8,
-    backgroundColor: "#11140D",
+    borderRadius: 4,
   },
   text: {
     fontSize: 16,

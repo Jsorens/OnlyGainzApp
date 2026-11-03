@@ -16,6 +16,8 @@ import type { MealLog } from "@/features/meal/types/MealLog";
 import FoodScreen from "@/app/foods";
 import { useMeals } from "@/features/contexts/MealsContext";
 import { router } from "expo-router";
+
+import { MealLogItemList } from "@/features/meal/components/MealLogItemList";
 // import { MealLog } from "@/Types/Meal/MealLog";
 
 export default function MealDetail() {
@@ -25,8 +27,6 @@ export default function MealDetail() {
   const { getMeals, removeFood } = useMeals();
   // Tilstanden for måltid som er her
   const [buttonPressed, setButtonPressed] = useState(false);
-
-  const round1 = (n: number) => Math.round(n * 10) / 10;
 
   const { date: selectedDate } = useMeals();
   if (!selectedDate) return false;
@@ -50,98 +50,7 @@ export default function MealDetail() {
     <SafeAreaView style={styles.screen}>
       <Stack.Screen options={{ title: mealId }} />
       <ScrollView contentContainerStyle={styles.list}>
-        {loggedFoods.map((log: MealLog) => (
-          <View key={log.id} style={styles.card}>
-            <Text style={styles.name}>{log.foodItem.name}</Text>
-
-            <View style={styles.macroRow}>
-              <View style={styles.macroBox}>
-                <Text style={styles.macroValue}>
-                  {round1((log.foodItem.macros?.calories ?? 0) * log.quantity)}
-                </Text>
-                <Text style={styles.macroLabel}>KCAL</Text>
-              </View>
-              <View style={styles.macroBox}>
-                <Text style={styles.macroValue}>
-                  {round1((log.foodItem.macros?.protein ?? 0) * log.quantity)}
-                </Text>
-                <Text style={styles.macroLabel}>PROTEIN</Text>
-              </View>
-              <View style={styles.macroBox}>
-                <Text style={styles.macroValue}>
-                  {round1((log.foodItem.macros?.carbs ?? 0) * log.quantity)}
-                </Text>
-                <Text style={styles.macroLabel}>CARBS</Text>
-              </View>
-              <View style={styles.macroBox}>
-                <Text style={styles.macroValue}>
-                  {round1((log.foodItem.macros?.fat ?? 0) * log.quantity)}
-                </Text>
-                <Text style={styles.macroLabel}>FAT</Text>
-              </View>
-            </View>
-
-            <Text style={styles.serving}>
-              SERVING: {round1((log.foodItem.servingSize ?? 0) * log.quantity)}{" "}
-              {log.foodItem.servingUnit ?? ""}
-            </Text>
-
-            <View style={styles.buttonRow}>
-              <Pressable
-                style={({ pressed }) => [
-                  styles.button,
-                  pressed && styles.editButtonPressed,
-                ]}
-                onPress={() =>
-                  router.push({
-                    pathname: "/meals/editMeal",
-                    params: {
-                      mealLog: JSON.stringify(log),
-                      mealId: mealId,
-                    },
-                  })
-                }
-              >
-                {({ pressed }) => (
-                  <Text
-                    style={[
-                      styles.buttonText,
-                      pressed && styles.editTextPressed,
-                    ]}
-                  >
-                    EDIT
-                  </Text>
-                )}
-              </Pressable>
-              <Pressable
-                style={({ pressed }) => [
-                  styles.button,
-                  styles.removeButton,
-                  pressed && styles.removeButtonPressed,
-                ]}
-                onPress={() => handleRemove(log.id)}
-              >
-                {({ pressed }) => (
-                  <Text
-                    style={[
-                      styles.buttonText,
-                      styles.removeText,
-                      pressed && styles.removeTextPressed,
-                    ]}
-                  >
-                    REMOVE
-                  </Text>
-                )}
-              </Pressable>
-            </View>
-
-            {buttonPressed && (
-              <Text style={{ color: "#ff1a1a", marginTop: 10 }}>
-                Removing {log.foodItem.name} from {mealId}...
-              </Text>
-            )}
-          </View>
-        ))}
+        <MealLogItemList data={loggedFoods} handleRemove={handleRemove} />
 
         {loggedFoods.length === 0 && (
           <Text style={styles.empty}>Her skal maten fra {mealId} vises</Text>

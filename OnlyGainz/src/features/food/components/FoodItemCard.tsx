@@ -11,6 +11,7 @@ import type { Food } from "@/features/food/types/Food";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Link, router } from "expo-router";
 import { useMeals } from "@/features/contexts/MealsContext";
+import { Buffering } from "@/features/shared/Buffering";
 
 type foodItemCardProp = {
   data: Food;
@@ -34,62 +35,78 @@ export function FoodItemCard({ data, mealType }: foodItemCardProp) {
   };
   return (
     <View style={styles.card}>
-      <Pressable
-        style={({ pressed }) => [
-          styles.info,
-          pressed && styles.addButtonPressed,
-        ]}
-        onPress={() =>
-          router.push({
-            pathname: "/foods/[foodItemId]",
-            params: {
-              foodItemId: data.id,
-              foodItemData: JSON.stringify(data),
-              mealId: mealType,
-            },
-          })
-        }
-      >
-        <Text style={styles.name}>{data.name}</Text>
-        <Text style={styles.kcal}>{data.macros.calories} kcal</Text>
-        <Text style={styles.kcal}>{data.macros.protein} g protein</Text>
-        <Text style={styles.kcal}>{data.macros.carbs} g carbs</Text>
-        <Text style={styles.kcal}>{data.macros.fat} g fat</Text>
+      <View style={styles.row}>
+        <Pressable
+          style={({ pressed }) => [
+            styles.info,
+            pressed && styles.addButtonPressed,
+          ]}
+          onPress={() =>
+            router.push({
+              pathname: "/foods/[foodItemId]",
+              params: {
+                foodItemId: data.id,
+                foodItemData: JSON.stringify(data),
+                mealId: mealType,
+              },
+            })
+          }
+        >
+          <Text style={styles.name}>{data.name}</Text>
+          <Text style={styles.kcal}>{data.macros.calories} kcal</Text>
+          <Text style={styles.kcal}>{data.macros.protein} g protein</Text>
+          <Text style={styles.kcal}>{data.macros.carbs} g carbs</Text>
+          <Text style={styles.kcal}>{data.macros.fat} g fat</Text>
+        </Pressable>
 
-        {buttonPressed && (
-          <Text style={{ color: "#FFC21A", marginLeft: 10 }}>
-            Added to {mealType}
-          </Text>
-        )}
-      </Pressable>
-
-      <Pressable
-        style={({ pressed }) => [
-          styles.addButton,
-          pressed && styles.addButtonPressed,
-        ]}
-        onPress={() => {
-          handleAddFood();
-        }}
-      >
-        {({ pressed }) => (
-          <Text style={[styles.addText, pressed && styles.addTextPressed]}>
-            ADD
-          </Text>
-        )}
-      </Pressable>
+        <Pressable
+          style={({ pressed }) => [
+            styles.addButton,
+            pressed && styles.addButtonPressed,
+          ]}
+          onPress={() => {
+            handleAddFood();
+          }}
+        >
+          {({ pressed }) => (
+            <Text style={[styles.addText, pressed && styles.addTextPressed]}>
+              ADD
+            </Text>
+          )}
+        </Pressable>
+      </View>
+      {buttonPressed && (
+        <View style={styles.bufferingContainer}>
+          <Buffering label="Adding..." />
+        </View>
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  bufferingContainer: {
+    borderTopWidth: 1,
+    borderTopColor: "#FFC21A",
+    paddingVertical: 8,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  overlay: {
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(10, 12, 8, 0.85)",
+  },
   card: {
-    flexDirection: "row",
+    // flexDirection: "row" fjernes herfra
     backgroundColor: "#11140D",
     borderWidth: 1,
     borderColor: "#FFC21A",
     marginHorizontal: 12,
     marginVertical: 6,
+  },
+  row: {
+    flexDirection: "row",
   },
   info: {
     flex: 1,
