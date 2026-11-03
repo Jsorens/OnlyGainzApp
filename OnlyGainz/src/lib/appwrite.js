@@ -1,7 +1,7 @@
 import { Client, TablesDB, Account, Teams } from "react-native-appwrite";
 import { Platform } from "react-native";
 
-const ADMIN_TEAM_ID = '6ad7befa00225bcabd55';
+const ADMIN_TEAM_ID = "6ad7befa00225bcabd55";
 
 const config = {
   endpoint: "https://fra.cloud.appwrite.io/v1",
@@ -11,6 +11,7 @@ const config = {
     Users: "6ab957ec001842c5f3e8",
     Foods: "6ac76db7001c67602dc6",
     Profiles: "6ace749800130796cac7",
+    Meals: "6ae8e026002c89795d1c",
   },
 };
 const client = new Client()

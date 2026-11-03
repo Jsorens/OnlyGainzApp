@@ -1,10 +1,8 @@
 import { Text, FlatList } from "react-native";
-import { database, config } from "@/lib/appwrite";
 import type { Food } from "@/Types/Meal/Food";
 import { useEffect, useState } from "react";
 import { FoodItemCard } from "./FoodItemCard";
-import { useLocalSearchParams } from "expo-router";
-import { getFoodsAppwrite, getFoodsAPI } from "@/api/Food";
+import { getFoodsAPI } from "@/api/foods-api";
 
 type foodItemListProp = {
   mealType: string;

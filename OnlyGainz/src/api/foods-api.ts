@@ -72,3 +72,35 @@ export async function getFoodsAPI(): Promise<Food[] | undefined> {
 
   return data || [];
 }
+
+export async function getFoodByIdAppwrite(
+  id: string,
+): Promise<Food | undefined> {
+  try {
+    const response = await database.getRow({
+      databaseId: config.db,
+      tableId: config.col.Foods,
+      rowId: id,
+    });
+
+    if (!response) return undefined;
+
+    const food: Food = {
+      id: response.$id,
+      name: response.name,
+      macros: {
+        calories: response.calories,
+        protein: response.protein,
+        carbs: response.carbs,
+        fat: response.fat,
+      },
+      servingSize: response.servingSize,
+      servingUnit: response.servingUnit,
+    };
+
+    return food;
+  } catch (error) {
+    console.error("Failed to fetch food by ID", error);
+    return undefined;
+  }
+}

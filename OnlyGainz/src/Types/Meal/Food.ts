@@ -8,5 +8,5 @@ export type Food = {
   macros: Macros;
 
   servingSize: number;
-  servingUnit: "g" | "ml" | "piece";
+  servingUnit: string;
 };
