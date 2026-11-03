@@ -10,6 +10,13 @@ type ServingSizeProps = {
 export default function ServingSize({ amount, setAmount }: ServingSizeProps) {
   return (
     <TextInput
+      style={{
+        borderWidth: 1,
+        borderColor: "#FFC21A",
+        padding: 8,
+        color: "#FFC21A",
+        fontFamily: "monospace",
+      }}
       value={amount}
       keyboardType="decimal-pad"
       onChangeText={(value) => {

@@ -1,5 +1,13 @@
 // This represents a single food item.
-import { View, SafeAreaView, Text, Button, TextInput } from "react-native";
+import {
+  View,
+  SafeAreaView,
+  Text,
+  Button,
+  TextInput,
+  Pressable,
+  StyleSheet,
+} from "react-native";
 import { useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import type { Food } from "@/Types/Meal/Food";
@@ -35,31 +43,146 @@ export default function foodDetail() {
   const numQuantity = Number(quantity) || 0;
 
   console.log("Food detail rendered - ", mealId);
+
   return (
-    <SafeAreaView>
-      <Text>{data.name}</Text>
-      <Text>
-        Kcal: {data.macros.calories * numQuantity} | protein:
-        {data.macros.protein * numQuantity} | carbs:
-        {data.macros.carbs * numQuantity} | fat: {data.macros.fat * numQuantity}
-      </Text>
-      <Text>
-        Serving: {data.servingSize * numQuantity} {data.servingUnit}
-      </Text>
+    <SafeAreaView style={styles.screen}>
+      <View style={styles.panel}>
+        <Text style={styles.name}>{data.name}</Text>
 
-      <Text>Quantity:</Text>
+        <View style={styles.macroRow}>
+          <View style={styles.macroBox}>
+            <Text style={styles.macroValue}>
+              {Math.round(data.macros.calories * numQuantity * 10) / 10}
+            </Text>
+            <Text style={styles.macroLabel}>KCAL</Text>
+          </View>
+          <View style={styles.macroBox}>
+            <Text style={styles.macroValue}>
+              {Math.round(data.macros.protein * numQuantity * 10) / 10}
+            </Text>
+            <Text style={styles.macroLabel}>PROTEIN</Text>
+          </View>
+          <View style={styles.macroBox}>
+            <Text style={styles.macroValue}>
+              {Math.round(data.macros.carbs * numQuantity * 10) / 10}
+            </Text>
+            <Text style={styles.macroLabel}>CARBS</Text>
+          </View>
+          <View style={styles.macroBox}>
+            <Text style={styles.macroValue}>
+              {Math.round(data.macros.fat * numQuantity * 10) / 10}
+            </Text>
+            <Text style={styles.macroLabel}>FAT</Text>
+          </View>
+        </View>
 
-      <ServingSize amount={quantity} setAmount={setQuantity} />
+        <Text style={styles.serving}>
+          SERVING: {data.servingSize * numQuantity} {data.servingUnit}
+        </Text>
 
-      <Button
-        title="Add"
-        onPress={() => {
-          if (typeof mealId === "string") {
-            addFood(data, numQuantity, mealId);
-            console.log("Legger til matvare", data.name, "til", mealId);
-          }
-        }}
-      />
+        <Text style={styles.label}>QUANTITY</Text>
+        <ServingSize amount={quantity} setAmount={setQuantity} />
+
+        <Pressable
+          style={({ pressed }) => [
+            styles.addButton,
+            pressed && styles.addButtonPressed,
+          ]}
+          onPress={() => {
+            if (typeof mealId === "string") {
+              addFood(data, numQuantity, mealId);
+              console.log("Legger til matvare", data.name, "til", mealId);
+            }
+          }}
+        >
+          {({ pressed }) => (
+            <Text style={[styles.addText, pressed && styles.addTextPressed]}>
+              ADD
+            </Text>
+          )}
+        </Pressable>
+      </View>
     </SafeAreaView>
   );
 }
+const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    backgroundColor: "#0A0C08",
+    padding: 12,
+  },
+  panel: {
+    backgroundColor: "#11140D",
+    borderWidth: 1,
+    borderColor: "#FFC21A",
+    padding: 16,
+  },
+  name: {
+    color: "#FFC21A",
+    fontFamily: "monospace",
+    fontSize: 20,
+    fontWeight: "700",
+    letterSpacing: 2,
+    textTransform: "uppercase",
+    marginBottom: 16,
+  },
+  macroRow: {
+    flexDirection: "row",
+    gap: 8,
+    marginBottom: 16,
+  },
+  macroBox: {
+    flex: 1,
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "rgba(255, 194, 26, 0.35)",
+    paddingVertical: 10,
+  },
+  macroValue: {
+    color: "#FFC21A",
+    fontFamily: "monospace",
+    fontSize: 16,
+    fontWeight: "700",
+  },
+  macroLabel: {
+    color: "#8A8466",
+    fontFamily: "monospace",
+    fontSize: 9,
+    letterSpacing: 1.5,
+    marginTop: 4,
+  },
+  serving: {
+    color: "#E8E2C8",
+    fontFamily: "monospace",
+    fontSize: 12,
+    letterSpacing: 1,
+    marginBottom: 16,
+  },
+  label: {
+    color: "#8A8466",
+    fontFamily: "monospace",
+    fontSize: 11,
+    letterSpacing: 2,
+    marginBottom: 8,
+  },
+  addButton: {
+    marginTop: 20,
+    borderWidth: 1,
+    borderColor: "#FFC21A",
+    paddingVertical: 14,
+    alignItems: "center",
+  },
+  addText: {
+    color: "#FFC21A",
+    fontFamily: "monospace",
+    fontWeight: "700",
+    fontSize: 14,
+    letterSpacing: 3,
+  },
+  addButtonPressed: {
+    backgroundColor: "#FFC21A",
+  },
+  addTextPressed: {
+    color: "#0A0C08",
+  },
+});
