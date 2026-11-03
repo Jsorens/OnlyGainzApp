@@ -15,7 +15,7 @@ import type { Food } from "@/features/food/types/Food";
 import type { MealType } from "@/features/meal/types/MealType";
 import { useMeals } from "@/features/contexts/MealsContext";
 import ServingSize from "@/features/food/components/ServingSize";
-
+import { Buffering } from "@/features/shared/Buffering";
 // This represents the page for details about a certain food
 export default function foodDetail() {
   const { foodItemData, mealId } = useLocalSearchParams<{
@@ -111,9 +111,7 @@ export default function foodDetail() {
         </Pressable>
 
         {buttonPressed && (
-          <Text style={{ color: "#ffff00", marginTop: 10 }}>
-            Adding {data.name} to {mealId}...
-          </Text>
+          <Buffering label={`Adding ${data.name} to ${mealId}...`} />
         )}
       </View>
     </SafeAreaView>

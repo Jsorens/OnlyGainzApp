@@ -7,6 +7,8 @@ import { SearchField } from "@/features/food/components/SearchField";
 import { getFoodsAPI } from "@/features/food/api/foods-api";
 import { useState, useEffect } from "react";
 
+import { Buffering } from "@/features/shared/Buffering";
+
 // This represents the screen for foods
 export default function FoodScreen() {
   const { mealId } = useLocalSearchParams<{
@@ -56,7 +58,7 @@ export default function FoodScreen() {
     <SafeAreaView>
       <CameraButton />
       <SearchField value={searchText} onChange={onChangeSearchText} />
-      {isLoading ? <Text>Loading foods...</Text> : null}
+      {isLoading && <Buffering label="Loading foods..." />}
       {!isLoading && foods.length > 0 && (
         <FoodItemList item={filteredFoods} mealType={mealId} />
       )}

@@ -5,7 +5,7 @@ import ServingSize from "@/features/food/components/ServingSize";
 import { useState } from "react";
 import { MealLog } from "@/features/meal/types/MealLog";
 import { useMeals } from "@/features/contexts/MealsContext";
-
+import { Buffering } from "@/features/shared/Buffering";
 export default function EditMealScreen() {
   // Vi deconstruncter den innsendte dataen
   const { mealLog, mealId } = useLocalSearchParams<{
@@ -93,11 +93,7 @@ export default function EditMealScreen() {
           </Text>
         )}
       </Pressable>
-      {buttonPressed && (
-        <Text style={{ color: "#ffff00", marginTop: 10 }}>
-          Saving Changes...
-        </Text>
-      )}
+      {buttonPressed && <Buffering label="Saving Changes..." />}
     </SafeAreaView>
   );
 }
