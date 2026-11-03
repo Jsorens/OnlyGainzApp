@@ -18,7 +18,10 @@ export function FoodItemCard({ data, mealType }: foodItemCardProp) {
   return (
     <View style={styles.card}>
       <Pressable
-        style={styles.info}
+        style={({ pressed }) => [
+          styles.info,
+          pressed && styles.addButtonPressed,
+        ]}
         onPress={() =>
           router.push({
             pathname: "/foods/[foodItemId]",
