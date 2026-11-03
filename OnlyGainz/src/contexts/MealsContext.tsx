@@ -23,6 +23,7 @@ type MealsContextType = {
   getMacros: () => Macros;
   getMeals: (mealType: string, selectedDate: Date) => MealLog[];
   setDate: (date: Date | null) => void;
+  editFood(meal: Partial<MealLog>, numQuantity: number): Promise<void>;
 };
 
 export const MealsContext = createContext<MealsContextType | undefined>(
@@ -30,7 +31,7 @@ export const MealsContext = createContext<MealsContextType | undefined>(
 );
 
 export function MealsProvider({ children }: { children: ReactNode }) {
-  const { logMeal, getMealLogs, deleteMeal } = useMealsAPI();
+  const { logMeal, getMealLogs, deleteMeal, editMeal } = useMealsAPI();
   // Holder på state og funksjonene
   const [consumedMeals, setConsumedMeals] = useState<MealLog[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
@@ -48,6 +49,7 @@ export function MealsProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth();
 
   useEffect(() => {
+    // Henter måltider fra API-et når brukeren eller den valgte datoen endres.
     const fetchMeals = async () => {
       if (!user || !selectedDate) {
         setConsumedMeals([]);
@@ -68,6 +70,7 @@ export function MealsProvider({ children }: { children: ReactNode }) {
   }, [user, selectedDate]);
 
   function getMacros(date: Date): Macros {
+    // Kalkulerer makroer for en gitt dato basert på konsumert måltider
     return consumedMeals.reduce(
       (total, meal) => {
         if (meal?.date && meal.date.toDateString() === date.toDateString()) {
@@ -106,6 +109,7 @@ export function MealsProvider({ children }: { children: ReactNode }) {
       type: mealType,
     };
 
+    // Legger til måltidet i API-et og oppdaterer lokal tilstand
     const loggedMeal = await logMeal(result as MealLog);
     setConsumedMeals(
       (previous: MealLog[]) =>
@@ -115,10 +119,29 @@ export function MealsProvider({ children }: { children: ReactNode }) {
 
   // Funksjon for å fjerne måltid
   async function removeFood(id: string) {
+    // Fjerner måltidet fra API-et og oppdaterer lokal tilstand
     await deleteMeal(id);
     setConsumedMeals(
       (previousMeals: MealLog[]) =>
         previousMeals.filter((meal) => meal?.id !== id) as MealLog[],
+    );
+  }
+
+  async function editFood(meal: MealLog, numQuantity: number) {
+    // Oppdaterer et eksisterende måltid med ny mengde
+    if (!meal.id) throw new Error("Invalid meal ID");
+    if (numQuantity <= 0) throw new Error("Quantity must be greater than 0");
+
+    meal.quantity = numQuantity;
+    // Oppdaterer måltidet i API-et med den nye mengden
+    const updatedMeal = await editMeal(meal, numQuantity);
+
+    // Oppdaterer lokal tilstand med det oppdaterte måltidet
+    setConsumedMeals(
+      (previousMeals: MealLog[]) =>
+        previousMeals.map((m) =>
+          m.id === updatedMeal.id ? updatedMeal : m,
+        ) as MealLog[],
     );
   }
 
@@ -141,6 +164,7 @@ export function MealsProvider({ children }: { children: ReactNode }) {
         getMacros: () => getMacros(selectedDate ?? new Date()),
         getMeals,
         setDate: setSelectedDate,
+        editFood,
       }}
     >
       {children}

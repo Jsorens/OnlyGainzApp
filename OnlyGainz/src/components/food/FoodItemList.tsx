@@ -5,41 +5,14 @@ import { FoodItemCard } from "./FoodItemCard";
 import { getFoodsAPI } from "@/api/foods-api";
 
 type foodItemListProp = {
+  item: Food[];
   mealType: string;
 };
 // This is just a basic test for displaying the food in the database.
-export default function FoodItemList({ mealType }: foodItemListProp) {
-  const fetchMethod = getFoodsAPI;
-  // We check if the food item is rendered
-  console.log("Food item list rendered - ", mealType);
-
-  // We change the state of the list.
-  const [foods, setFoods] = useState<Food[]>([]);
-
-  const [isLoading, setIsLoading] = useState(true);
-  useEffect(() => {
-    const fetchFoods = async () => {
-      // Asynkron function for fetching food data from the appwrite database
-      try {
-        const response = await fetchMethod();
-        setFoods(response ?? []);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchFoods();
-  }, []);
-
-  if (isLoading) {
-    return <Text>Loading foods...</Text>;
-  }
-
+export default function FoodItemList({ item, mealType }: foodItemListProp) {
   return (
     <FlatList
-      data={foods}
+      data={item}
       keyExtractor={(item) => item.id}
       renderItem={({ item }) => (
         <FoodItemCard data={item} mealType={mealType} />

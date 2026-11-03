@@ -23,7 +23,7 @@ function toRow(meal: MealLog, userId: string): MealRow {
   return {
     userId,
     type: meal.type,
-    date: meal.date.toISOString(),
+    date: new Date(meal.date).toISOString(),
     foodName: f.name ?? "Ukjent",
     calories: Math.round(f.macros?.calories ?? 0),
     protein: f.macros?.protein ?? 0,
@@ -60,6 +60,7 @@ interface MealsAPI {
   logMeal(meal: Partial<MealLog>): Promise<MealLog>;
   getMealLogs(): Promise<MealLog[]>;
   deleteMeal(id: string): Promise<void>;
+  editMeal(meal: MealLog, numQuantity: number): Promise<MealLog>;
 }
 
 export function useMealsAPI(): MealsAPI {
@@ -67,6 +68,7 @@ export function useMealsAPI(): MealsAPI {
     logMeal: logMealAppwrite,
     getMealLogs: getMealsAppwrite,
     deleteMeal: deleteMealAppwrite,
+    editMeal: editMealAppwrite,
   };
 }
 
@@ -102,7 +104,7 @@ async function getMealsAppwrite(): Promise<MealLog[]> {
     ],
   });
 
-  console.log("Fetched meals:", res.rows);
+  console.log({ ok: true, fetched: res.rows.length });
 
   return res.rows.map(fromRow);
 }
@@ -121,4 +123,39 @@ async function deleteMealAppwrite(id: string): Promise<void> {
     tableId: config.col.Meals,
     rowId: id,
   });
+}
+
+async function editMealAppwrite(
+  meal: MealLog,
+  numQuantity: number,
+): Promise<MealLog> {
+  const user = await account.get(); // kaster hvis ikke innlogget
+
+  if (!user.$id) {
+    throw new Error("User not authenticated");
+  }
+
+  if (!meal.id) {
+    throw new Error("Invalid meal ID");
+  }
+  if (numQuantity <= 0) {
+    throw new Error("Quantity must be greater than 0");
+  }
+  meal.quantity = numQuantity;
+
+  const calculatedMacros = {
+    calories: (meal.foodItem?.macros?.calories ?? 0) * numQuantity,
+    protein: (meal.foodItem?.macros?.protein ?? 0) * numQuantity,
+    carbs: (meal.foodItem?.macros?.carbs ?? 0) * numQuantity,
+    fat: (meal.foodItem?.macros?.fat ?? 0) * numQuantity,
+  };
+
+  const row = await database.updateRow<Models.Row & MealRow>({
+    databaseId: config.db,
+    tableId: config.col.Meals,
+    rowId: meal.id,
+    data: toRow({ ...meal, macros: calculatedMacros } as MealLog, user.$id),
+  });
+
+  return fromRow(row);
 }
