@@ -79,7 +79,10 @@ export default function MealDetail() {
 
             <View style={styles.buttonRow}>
               <Pressable
-                style={styles.button}
+                style={({ pressed }) => [
+                  styles.button,
+                  pressed && styles.editButtonPressed,
+                ]}
                 onPress={() =>
                   router.push({
                     pathname: "/meals/editMeal",
@@ -90,15 +93,36 @@ export default function MealDetail() {
                   })
                 }
               >
-                <Text style={styles.buttonText}>EDIT</Text>
+                {({ pressed }) => (
+                  <Text
+                    style={[
+                      styles.buttonText,
+                      pressed && styles.editTextPressed,
+                    ]}
+                  >
+                    EDIT
+                  </Text>
+                )}
               </Pressable>
               <Pressable
-                style={[styles.button, styles.removeButton]}
+                style={({ pressed }) => [
+                  styles.button,
+                  styles.removeButton,
+                  pressed && styles.removeButtonPressed,
+                ]}
                 onPress={() => handleRemove(log.id)}
               >
-                <Text style={[styles.buttonText, styles.removeText]}>
-                  REMOVE
-                </Text>
+                {({ pressed }) => (
+                  <Text
+                    style={[
+                      styles.buttonText,
+                      styles.removeText,
+                      pressed && styles.removeTextPressed,
+                    ]}
+                  >
+                    REMOVE
+                  </Text>
+                )}
               </Pressable>
             </View>
           </View>
@@ -199,5 +223,18 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
     textAlign: "center",
     marginTop: 24,
+  },
+  removeButtonPressed: {
+    backgroundColor: "#ff0101",
+  },
+  removeTextPressed: {
+    color: "#0A0C08",
+  },
+
+  editButtonPressed: {
+    backgroundColor: "#FFC21A",
+  },
+  editTextPressed: {
+    color: "#0A0C08",
   },
 });

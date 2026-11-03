@@ -71,10 +71,18 @@ export default function EditMealScreen() {
 
       <Text style={styles.label}>QUANTITY</Text>
       <ServingSize amount={quantity} setAmount={setQuantity} />
-      <Pressable onPress={() => editFood(data, numQuantity)}>
-        <View style={styles.addButton}>
-          <Text style={styles.addText}>SAVE</Text>
-        </View>
+      <Pressable
+        onPress={() => editFood(data, numQuantity)}
+        style={({ pressed }) => [
+          styles.addButton,
+          pressed && styles.editButtonPressed,
+        ]}
+      >
+        {({ pressed }) => (
+          <Text style={[styles.addText, pressed && styles.editTextPressed]}>
+            SAVE
+          </Text>
+        )}
       </Pressable>
     </SafeAreaView>
   );
@@ -153,5 +161,17 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     fontSize: 14,
     letterSpacing: 3,
+  },
+  editButtonPressed: {
+    backgroundColor: "#FFC21A",
+  },
+  editTextPressed: {
+    color: "#0A0C08",
+  },
+  removeButtonPressed: {
+    backgroundColor: "#FFC21A",
+  },
+  removeTextPressed: {
+    color: "#0A0C08",
   },
 });

@@ -51,20 +51,12 @@ export default function FoodScreen() {
     fetchFoods();
   }, []);
 
-  if (isLoading) {
-    return <Text>Loading foods...</Text>;
-  }
-
   console.log("FoodScreen rendered - ", mealId);
   return (
     <SafeAreaView>
       <CameraButton />
       <SearchField value={searchText} onChange={onChangeSearchText} />
-      {isLoading ? (
-        <SafeAreaView>
-          <Text>Loading foods...</Text>
-        </SafeAreaView>
-      ) : null}
+      {isLoading ? <Text>Loading foods...</Text> : null}
       {!isLoading && foods.length > 0 && (
         <FoodItemList item={filteredFoods} mealType={mealId} />
       )}

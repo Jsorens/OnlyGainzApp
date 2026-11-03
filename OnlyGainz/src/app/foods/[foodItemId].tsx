@@ -84,7 +84,10 @@ export default function foodDetail() {
         <ServingSize amount={quantity} setAmount={setQuantity} />
 
         <Pressable
-          style={styles.addButton}
+          style={({ pressed }) => [
+            styles.addButton,
+            pressed && styles.addButtonPressed,
+          ]}
           onPress={() => {
             if (typeof mealId === "string") {
               addFood(data, numQuantity, mealId);
@@ -92,7 +95,11 @@ export default function foodDetail() {
             }
           }}
         >
-          <Text style={styles.addText}>ADD</Text>
+          {({ pressed }) => (
+            <Text style={[styles.addText, pressed && styles.addTextPressed]}>
+              ADD
+            </Text>
+          )}
         </Pressable>
       </View>
     </SafeAreaView>
@@ -171,5 +178,11 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     fontSize: 14,
     letterSpacing: 3,
+  },
+  addButtonPressed: {
+    backgroundColor: "#FFC21A",
+  },
+  addTextPressed: {
+    color: "#0A0C08",
   },
 });

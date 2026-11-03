@@ -38,10 +38,17 @@ export function FoodItemCard({ data, mealType }: foodItemCardProp) {
       </Pressable>
 
       <Pressable
-        style={styles.addButton}
+        style={({ pressed }) => [
+          styles.addButton,
+          pressed && styles.addButtonPressed,
+        ]}
         onPress={() => addFood(data, 1, mealType)}
       >
-        <Text style={styles.addText}>ADD</Text>
+        {({ pressed }) => (
+          <Text style={[styles.addText, pressed && styles.addTextPressed]}>
+            ADD
+          </Text>
+        )}
       </Pressable>
     </View>
   );
@@ -89,5 +96,11 @@ const styles = StyleSheet.create({
     fontFamily: "monospace",
     fontWeight: "700",
     letterSpacing: 2,
+  },
+  addButtonPressed: {
+    backgroundColor: "#FFC21A",
+  },
+  addTextPressed: {
+    color: "#0A0C08",
   },
 });
