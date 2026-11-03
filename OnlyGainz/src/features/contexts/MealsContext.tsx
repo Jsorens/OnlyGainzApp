@@ -9,10 +9,10 @@ import {
 } from "react";
 
 import { useMealsAPI } from "@/api/meals-api";
-import { useAuth } from "@/contexts/AuthProvider";
-import type { Food } from "@/Types/Meal/Food";
-import type { Macros } from "@/Types/Meal/Macros";
-import { MealLog } from "@/Types/Meal/MealLog";
+import { useAuth } from "@/features/contexts/AuthProvider";
+import type { Food } from "@/features/food/types/Food";
+import type { Macros } from "@/features/food/types/Macros";
+import { MealLog } from "@/features/meal/types/MealLog";
 import { account } from "@/lib/appwrite";
 
 type MealsContextType = {

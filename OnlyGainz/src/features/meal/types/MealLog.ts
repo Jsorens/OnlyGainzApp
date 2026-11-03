@@ -1,4 +1,4 @@
-import { Food } from "../Meal/Food";
+import { Food } from "../../food/types/Food";
 export type MealLog = {
   id: string;
   type: string;

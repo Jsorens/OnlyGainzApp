@@ -1,6 +1,6 @@
 // API for logging meals
-import type { Food } from "@/Types/Meal/Food";
-import type { MealLog } from "@/Types/Meal/MealLog";
+import type { Food } from "@/features/food/types/Food";
+import type { MealLog } from "@/features/meal/types/MealLog";
 import { account, config, database } from "@/lib/appwrite";
 import { ID, Models, Query } from "react-native-appwrite";
 

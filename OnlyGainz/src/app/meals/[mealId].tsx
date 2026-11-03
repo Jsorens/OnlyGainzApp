@@ -10,10 +10,10 @@ import {
 } from "react-native";
 import { useEffect, useReducer, useState } from "react";
 import { Link, Stack, useLocalSearchParams } from "expo-router";
-import type { Food } from "@/Types/Meal/Food";
-import type { MealLog } from "@/Types/Meal/MealLog";
+import type { Food } from "@/features/food/types/Food";
+import type { MealLog } from "@/features/meal/types/MealLog";
 import FoodScreen from "@/app/foods";
-import { useMeals } from "@/contexts/MealsContext";
+import { useMeals } from "@/features/contexts/MealsContext";
 import { router } from "expo-router";
 // import { MealLog } from "@/Types/Meal/MealLog";
 export default function MealDetail() {

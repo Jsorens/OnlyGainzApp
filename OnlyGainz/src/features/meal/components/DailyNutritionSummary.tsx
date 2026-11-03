@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet } from "react-native";
 import Svg, { Circle } from "react-native-svg";
-import { useMeals } from "@/contexts/MealsContext";
+import { useMeals } from "@/features/contexts/MealsContext";
 
 const colors = {
   bg: "#0E1012",

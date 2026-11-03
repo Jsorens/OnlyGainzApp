@@ -1,8 +1,8 @@
 import { View, Text, Pressable, Button, StyleSheet } from "react-native";
-import type { Food } from "@/Types/Meal/Food";
+import type { Food } from "@/features/food/types/Food";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Link, router } from "expo-router";
-import { useMeals } from "@/contexts/MealsContext";
+import { useMeals } from "@/features/contexts/MealsContext";
 
 type foodItemCardProp = {
   data: Food;

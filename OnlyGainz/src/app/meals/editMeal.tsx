@@ -1,10 +1,10 @@
-import { Food } from "@/Types/Meal/Food";
+import { Food } from "@/features/food/types/Food";
 import { useLocalSearchParams } from "expo-router";
 import { View, Text, SafeAreaView, StyleSheet, Pressable } from "react-native";
-import ServingSize from "@/components/food/ServingSize";
+import ServingSize from "@/features/food/components/ServingSize";
 import { useState } from "react";
-import { MealLog } from "@/Types/Meal/MealLog";
-import { useMeals } from "@/contexts/MealsContext";
+import { MealLog } from "@/features/meal/types/MealLog";
+import { useMeals } from "@/features/contexts/MealsContext";
 
 export default function EditMealScreen() {
   // Vi deconstruncter den innsendte dataen

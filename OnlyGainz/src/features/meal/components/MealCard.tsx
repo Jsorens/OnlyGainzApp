@@ -3,7 +3,7 @@ import { Link, useRouter } from "expo-router";
 //import FoodLayout from "./FoodLayout";
 import { Pressable, View, Text, Button } from "react-native";
 import { StyleSheet } from "react-native";
-import type { Food } from "@/Types/Meal/Food";
+import type { Food } from "@/features/food/types/Food";
 // We want to be able to press the mealcard
 // When the mealcard is press we wish to enter another "tab"/component
 

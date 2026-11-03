@@ -10,10 +10,10 @@ import {
 } from "react-native";
 import { useState } from "react";
 import { useLocalSearchParams } from "expo-router";
-import type { Food } from "@/Types/Meal/Food";
-import type { MealType } from "@/Types/Meal/MealType";
-import { useMeals } from "@/contexts/MealsContext";
-import ServingSize from "@/components/food/ServingSize";
+import type { Food } from "@/features/food/types/Food";
+import type { MealType } from "@/features/meal/types/MealType";
+import { useMeals } from "@/features/contexts/MealsContext";
+import ServingSize from "@/features/food/components/ServingSize";
 
 // This represents the page for details about a certain food
 export default function foodDetail() {

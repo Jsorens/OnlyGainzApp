@@ -3,7 +3,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import * as SplashScreen from "expo-splash-screen";
 import { StyleSheet, Text, View, ActivityIndicator } from "react-native";
-import { useAuth } from "@/contexts/AuthProvider";
+import { useAuth } from "@/features/contexts/AuthProvider";
 import { useEffect } from "react";
 
 //SplashScreen.preventAutoHideAsync();

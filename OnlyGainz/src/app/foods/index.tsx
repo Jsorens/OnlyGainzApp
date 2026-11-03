@@ -1,9 +1,9 @@
 import { View, Text, TextInput, SafeAreaView } from "react-native";
-import FoodItemList from "@/components/food/FoodItemList";
-import type { Food } from "@/Types/Meal/Food";
+import FoodItemList from "@/features/food/components/FoodItemList";
+import type { Food } from "@/features/food/types/Food";
 import { useLocalSearchParams } from "expo-router";
-import CameraButton from "@/components/food/Camera";
-import { SearchField } from "@/components/food/SearchField";
+import CameraButton from "@/features/food/components/Camera";
+import { SearchField } from "@/features/food/components/SearchField";
 import { getFoodsAPI } from "@/api/foods-api";
 import { useState, useEffect } from "react";
 

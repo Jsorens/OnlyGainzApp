@@ -8,19 +8,19 @@ import {
 } from "react-native";
 import { useState } from "react";
 import { Calendar } from "react-native-calendars";
-import MealCardList from "@/components/meal/MealCardList";
-import DailyNutritionSummary from "@/components/meal/DailyNutritionSummary";
+import MealCardList from "@/features/meal/components/MealCardList";
+import DailyNutritionSummary from "@/features/meal/components/DailyNutritionSummary";
 
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { useMeals } from "@/contexts/MealsContext";
+import { useMeals } from "@/features/contexts/MealsContext";
 //import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 
 export default function Meals() {
   const [calendarOpen, setCalendarOpen] = useState(false);
   const { date: selectedDate, setDate: setSelectedDate } = useMeals();
-  console.log("Selected date:", selectedDate);
+  //console.log("Selected date:", selectedDate);
 
-  console.log("Meals rendered");
+  //console.log("Meals rendered");
   return (
     <View style={styles.container}>
       <Text style={styles.text}>
