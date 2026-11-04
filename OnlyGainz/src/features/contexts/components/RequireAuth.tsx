@@ -1,7 +1,7 @@
 // components/RequireAuth.tsx
 import { View, ActivityIndicator } from "react-native";
 import { Redirect } from "expo-router";
-import { useAuth } from "@/contexts/AuthProvider";
+import { useAuth } from "@/features/contexts/AuthProvider";
 
 type Props = { children: React.ReactNode };
 

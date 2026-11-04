@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, Pressable } from "react-native";
 import UserProfileCard from "../../features/profile/components/UserProfileCard";
-import { useAuth } from "../../contexts/AuthProvider"
+import { useAuth } from "../../features/contexts/AuthProvider";
 import { Redirect } from "expo-router";
 
 export default function Admin() {
@@ -9,15 +9,17 @@ export default function Admin() {
   if (loading) return null;
 
   console.log("admin --> isAdmin: ", isAdmin);
-  console.log("admin --> user: ", user)
-  
+  console.log("admin --> user: ", user);
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Admin page</Text>
       <Text style={styles.text}>Admin name: {user ? user.name : "N/A"}</Text>
       <Text style={styles.text}></Text>
 
-      <Pressable onPress={logout}><Text>Logout</Text></Pressable>
+      <Pressable onPress={logout}>
+        <Text>Logout</Text>
+      </Pressable>
     </View>
   );
 }

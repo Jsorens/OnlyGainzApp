@@ -1,11 +1,13 @@
 import { View, Text, TextInput, SafeAreaView } from "react-native";
-import FoodItemList from "@/components/food/FoodItemList";
-import type { Food } from "@/Types/Meal/Food";
+import FoodItemList from "@/features/food/components/FoodItemList";
+import type { Food } from "@/features/food/types/Food";
 import { useLocalSearchParams } from "expo-router";
-import CameraButton from "@/components/food/Camera";
-import { SearchField } from "@/components/food/SearchField";
-import { getFoodsAPI } from "@/api/foods-api";
+import CameraButton from "@/features/food/components/Camera";
+import { SearchField } from "@/features/food/components/SearchField";
+import { getFoodsAPI } from "@/features/food/api/foods-api";
 import { useState, useEffect } from "react";
+
+import { Buffering } from "@/features/shared/Buffering";
 
 // This represents the screen for foods
 export default function FoodScreen() {
@@ -56,7 +58,7 @@ export default function FoodScreen() {
     <SafeAreaView>
       <CameraButton />
       <SearchField value={searchText} onChange={onChangeSearchText} />
-      {isLoading ? <Text>Loading foods...</Text> : null}
+      {isLoading && <Buffering label="Loading foods..." />}
       {!isLoading && foods.length > 0 && (
         <FoodItemList item={filteredFoods} mealType={mealId} />
       )}

@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, Pressable, ScrollView } from "react-native";
 import HomeIcon from "@/assets/images/svg/HomeIcon.svg";
-import DailyNutritionSummary from "@/components/meal/DailyNutritionSummary";
-import { useAuth } from "@/contexts/AuthProvider";
+import DailyNutritionSummary from "@/features/meal/components/DailyNutritionSummary";
+import { useAuth } from "@/features/contexts/AuthProvider";
 
 export default function Home() {
   const { user, session, logout } = useAuth();

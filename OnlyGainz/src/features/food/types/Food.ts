@@ -1,5 +1,5 @@
 // This represents a food. it contains servingsize, unit, and macros per servingsize.
-import { Macros } from "./Macros";
+import { Macros } from "@/features/food/types/Macros";
 export type Food = {
   [x: string]: any;
   id: string;

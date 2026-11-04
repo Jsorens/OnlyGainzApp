@@ -1,4 +1,4 @@
-import { Food } from "@/Types/Meal/Food";
+import { Food } from "@/features/food/types/Food";
 import { TextInput } from "react-native";
 
 type ServingSizeProps = {

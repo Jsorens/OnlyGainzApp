@@ -1,16 +1,19 @@
 import { StyleSheet, Text, View } from "react-native";
 import UserProfileCard from "@/features/profile/components/UserProfileCard";
-import { useAuth } from "@/contexts/AuthProvider";
+import { useAuth } from "@/features/contexts/AuthProvider";
 
 export default function Profile() {
   const { user } = useAuth();
-  
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome to OnlyGainz!</Text>
       <Text style={styles.text}>Profile</Text>
-      {user ? <UserProfileCard data={ user.$id }/>
-      : <Text>You are not logged in</Text>}
+      {user ? (
+        <UserProfileCard data={user.$id} />
+      ) : (
+        <Text>You are not logged in</Text>
+      )}
     </View>
   );
 }

@@ -1,5 +1,5 @@
 import { config, database } from "@/lib/appwrite";
-import { Food } from "@/Types/Meal/Food";
+import { Food } from "@/features/food/types/Food";
 
 // Dette enedepunket er en ai-generert nettside for å hente matdata fra OnlyGainz API og brukes til å hente informasjon om matvarer.
 // URI for OnlyGainz API endpoint for foods.

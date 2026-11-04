@@ -7,14 +7,15 @@ import {
   TextInput,
   Pressable,
   StyleSheet,
+  Vibration,
 } from "react-native";
 import { useState } from "react";
 import { useLocalSearchParams } from "expo-router";
-import type { Food } from "@/Types/Meal/Food";
-import type { MealType } from "@/Types/Meal/MealType";
-import { useMeals } from "@/contexts/MealsContext";
-import ServingSize from "@/components/food/ServingSize";
-
+import type { Food } from "@/features/food/types/Food";
+import type { MealType } from "@/features/meal/types/MealType";
+import { useMeals } from "@/features/contexts/MealsContext";
+import ServingSize from "@/features/food/components/ServingSize";
+import { Buffering } from "@/features/shared/Buffering";
 // This represents the page for details about a certain food
 export default function foodDetail() {
   const { foodItemData, mealId } = useLocalSearchParams<{
@@ -23,7 +24,19 @@ export default function foodDetail() {
   }>();
 
   const { addFood } = useMeals();
+  const [buttonPressed, setButtonPressed] = useState(false);
 
+  const handleAdd = () => {
+    Vibration.vibrate(50);
+    setButtonPressed(true);
+    setTimeout(() => {
+      if (typeof mealId === "string") {
+        addFood(data, numQuantity, mealId);
+        console.log("Legger til matvare", data.name, "til", mealId);
+      }
+      setButtonPressed(false);
+    }, 1000);
+  };
   if (!foodItemData) {
     return <Text>Food data not found</Text>;
   }
@@ -88,12 +101,7 @@ export default function foodDetail() {
             styles.addButton,
             pressed && styles.addButtonPressed,
           ]}
-          onPress={() => {
-            if (typeof mealId === "string") {
-              addFood(data, numQuantity, mealId);
-              console.log("Legger til matvare", data.name, "til", mealId);
-            }
-          }}
+          onPress={handleAdd}
         >
           {({ pressed }) => (
             <Text style={[styles.addText, pressed && styles.addTextPressed]}>
@@ -101,6 +109,10 @@ export default function foodDetail() {
             </Text>
           )}
         </Pressable>
+
+        {buttonPressed && (
+          <Buffering label={`Adding ${data.name} to ${mealId}...`} />
+        )}
       </View>
     </SafeAreaView>
   );

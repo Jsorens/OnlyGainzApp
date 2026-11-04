@@ -2,9 +2,9 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { ActivityIndicator, useColorScheme } from "react-native";
 import { Stack, useRouter, useSegments, Redirect } from "expo-router";
-import AuthProvider, { useAuth } from "@/contexts/AuthProvider";
+import AuthProvider, { useAuth } from "@/features/contexts/AuthProvider";
 import { useEffect } from "react";
-import { MealsProvider } from "@/contexts/MealsContext";
+import { MealsProvider } from "@/features/contexts/MealsContext";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -29,14 +29,13 @@ export function RootLayoutInner() {
     const root = segments[0] as string | undefined;
     const protectedRoots = ["(tabs)", "foods", "meals"];
 
-
     const inApp = protectedRoots.includes(root ?? "");
     const inAuth = segments[0] === "auth";
 
-    if (!session && inApp) {  // not logged in and inside (tabs) or root
+    if (!session && inApp) {
+      // not logged in and inside (tabs) or root
       router.replace("/auth/login");
-    }
-    else if (session && inAuth) {
+    } else if (session && inAuth) {
       router.replace("/(tabs)");
     }
   }, [loading, session, segments]);
@@ -67,5 +66,5 @@ export default function RootLayout() {
     <AuthProvider>
       <RootLayoutInner />
     </AuthProvider>
-  )
+  );
 }

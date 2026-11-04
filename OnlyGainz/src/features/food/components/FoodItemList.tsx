@@ -1,8 +1,8 @@
 import { Text, FlatList } from "react-native";
-import type { Food } from "@/Types/Meal/Food";
+import type { Food } from "@/features/food/types/Food";
 import { useEffect, useState } from "react";
 import { FoodItemCard } from "./FoodItemCard";
-import { getFoodsAPI } from "@/api/foods-api";
+import { getFoodsAPI } from "@/features/food/api/foods-api";
 
 type foodItemListProp = {
   item: Food[];
