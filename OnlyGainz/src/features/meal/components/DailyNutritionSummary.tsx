@@ -5,7 +5,7 @@ import { useMeals } from "@/features/contexts/MealsContext";
 import { useProfileAPI } from "@/features/profile/api/profile-api";
 import { useEffect, useState } from "react";
 const colors = {
-  bg: "#0E1012",
+  bg: "#232323",
   surface: "#030304",
   surface2: "#674f06",
   border: "#ffb700",

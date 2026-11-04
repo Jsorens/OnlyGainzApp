@@ -13,7 +13,7 @@ const CustomTheme = {
   colors: {
     ...DarkTheme.colors,
     text: "#FFFFFF",
-    background: "#2f2f2f",
+    background: "#161616",
   },
 };
 
