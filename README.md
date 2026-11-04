@@ -72,6 +72,8 @@ npm run web        # start in the browser
 npm test           # run the tests
 npm run lint       # lint
 npx tsc --noEmit   # type check
+npx expo login --no-browser # Login to expo without using browser
+npx expo whoami # useful to double check if you are logged in or not
 ```
 
 ## Backend (Appwrite)
