@@ -1,9 +1,9 @@
 export type Profile = {
-    id: number;
-    name: string;
-    bio: string;
-    age: string;
-    city: string;
-    country: string;
-    //updatedAt: 
-}
+  name: string;
+  bio: string;
+  city: string;
+  country: string;
+  birthday: string | null;
+  calorieGoal: number;
+  //updatedAt:
+};

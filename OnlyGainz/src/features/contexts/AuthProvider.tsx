@@ -8,6 +8,7 @@ import {
 import { account } from "@/lib/appwrite";
 import { Models, ID } from "react-native-appwrite";
 import { getIsAdmin } from "./util/get-admin";
+import { useProfileAPI } from "@/features/profile/api/profile-api";
 
 type AuthContextType = {
   user: User | null;
@@ -49,7 +50,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
   const [session, setSession] = useState<Session | null>(null);
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(true);
-
+  const { createProfile } = useProfileAPI();
   useEffect(() => {
     init();
   }, []);
@@ -101,13 +102,17 @@ export default function AuthProvider({ children }: AuthProviderProps) {
   const register = async ({ email, password, name }: RegisterProps) => {
     setLoading(true);
     try {
-      await account.create({
+      const accountResult = await account.create({
         userId: ID.unique(),
         email,
         password,
         name,
       });
+      //const userId = accountResult.$id;
+
       await login({ email, password });
+
+      await createProfile();
     } catch (error) {
       console.log("Register error: ", error);
     } finally {
