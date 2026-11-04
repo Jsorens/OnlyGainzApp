@@ -92,7 +92,7 @@ export default function TabLayout() {
         }}
       />
 
-      <Tabs.Screen
+      {/* <Tabs.Screen
         name="settings"
         options={{
           tabBarLabel: "Settings",
@@ -104,7 +104,7 @@ export default function TabLayout() {
           ),
           ...tabScreenOptions,
         }}
-      />
+      /> */}
 
       <Tabs.Protected guard={!!isAdmin}>
         <Tabs.Screen
