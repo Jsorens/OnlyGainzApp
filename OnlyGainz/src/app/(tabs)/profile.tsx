@@ -7,8 +7,6 @@ export default function Profile() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome to OnlyGainz!</Text>
-      <Text style={styles.text}>Profile</Text>
       {user ? (
         <UserProfileCard data={user.$id} />
       ) : (

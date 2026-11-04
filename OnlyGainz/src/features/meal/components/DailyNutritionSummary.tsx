@@ -1,13 +1,15 @@
+"use client";
 import { View, Text, StyleSheet } from "react-native";
 import Svg, { Circle } from "react-native-svg";
 import { useMeals } from "@/features/contexts/MealsContext";
-
+import { useProfileAPI } from "@/features/profile/api/profile-api";
+import { useEffect, useState } from "react";
 const colors = {
   bg: "#0E1012",
-  surface: "#171A1D",
-  surface2: "#1E2226",
-  border: "#2A3036",
-  yellow: "#FFD24A",
+  surface: "#030304",
+  surface2: "#674f06",
+  border: "#ffb700",
+  yellow: "#ffdd00",
   yellowDark: "#E0A800",
   yellowLight: "#FFE88A",
   muted: "#8D979F",
@@ -19,17 +21,52 @@ type Props = {
   carbsGoal?: number;
   fatGoal?: number;
 };
+const KCAL_PER_GRAM = { protein: 4, carbs: 4, fat: 9 };
+type MacroSplit = {
+  protein: number;
+  carbs: number;
+  fat: number;
+};
+export function calculateMacros(
+  calories: number,
+  split: MacroSplit = { protein: 0.3, carbs: 0.45, fat: 0.25 },
+) {
+  return {
+    calories,
+    protein: Math.round((calories * split.protein) / KCAL_PER_GRAM.protein),
+    carbs: Math.round((calories * split.carbs) / KCAL_PER_GRAM.carbs),
+    fat: Math.round((calories * split.fat) / KCAL_PER_GRAM.fat),
+  };
+}
 
 // Oppsummering av dagens Nutrition
-export default function DailyNutritionSummary({
-  calorieGoal = 2500,
-  proteinGoal = 150,
-  carbsGoal = 250,
-  fatGoal = 80,
-}: Props) {
+export default function DailyNutritionSummary() {
   const { getMacros } = useMeals();
+  const { getProfileInfo } = useProfileAPI();
+  const [calorieTarget, setCalorieTarget] = useState(2500);
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const profileInfo = await getProfileInfo();
+        if (profileInfo?.calorieGoal) {
+          setCalorieTarget(profileInfo.calorieGoal);
+        }
+      } catch (error) {
+        console.log("Kunne ikke hente profil: ", error);
+      }
+    };
+    loadProfile();
+  }, []);
+
   const { calories, protein, carbs, fat } = getMacros();
 
+  const {
+    calories: calorieGoal,
+    protein: proteinGoal,
+    carbs: carbsGoal,
+    fat: fatGoal,
+  } = calculateMacros(calorieTarget);
   const macros = [
     {
       label: "Protein",

@@ -8,7 +8,7 @@ import {
 import { useState } from "react";
 import { useAuth } from "@/features/contexts/AuthProvider";
 import { Redirect, Link } from "expo-router";
-
+import Logo from "@/features/shared/Logo";
 export default function LoginScreen() {
   const { login, session, isAdmin, loading } = useAuth();
   const [email, setEmail] = useState("");
