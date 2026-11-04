@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   card: {
-    backgroundColor: "#11140D",
+    backgroundColor: "#020202",
     borderWidth: 1,
     borderColor: "#FFC21A",
     padding: 14,

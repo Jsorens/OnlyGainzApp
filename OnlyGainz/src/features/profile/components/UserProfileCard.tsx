@@ -146,7 +146,7 @@ export default function UserProfileCard({ data }: UserProfileProps) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#11140D",
+    backgroundColor: "#090909",
     borderWidth: 1,
     borderColor: "#FFC21A",
     marginHorizontal: 12,
