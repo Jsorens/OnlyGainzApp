@@ -1,6 +1,14 @@
-import { View, Text, Pressable, StyleSheet, TextInput } from "react-native";
+import {
+  View,
+  Text,
+  Pressable,
+  StyleSheet,
+  TextInput,
+  Vibration,
+  KeyboardTypeOptions,
+} from "react-native";
 import { useEffect, useState } from "react";
-import { profileRepository } from "@/features/profile/api/profile-api";
+import { useProfileAPI } from "@/features/profile/api/profile-api";
 import { Profile } from "../types/Profile";
 import { useAuth } from "@/features/contexts/AuthProvider";
 
@@ -10,48 +18,46 @@ type UserProfileProps = {
 
 export default function UserProfileCard({ data }: UserProfileProps) {
   const [isEditing, setIsEditing] = useState(false);
-  const [profile, setProfile] = useState<Profile | null>();
+  const [profile, setProfile] = useState<Profile | null>(null);
+  // Lagret versjon, brukes når man trykker Cancel
+  const [savedProfile, setSavedProfile] = useState<Profile | null>(null);
   const { user } = useAuth();
+  const { getProfileInfo, updateProfile } = useProfileAPI();
 
-  if (!user) return;
-
-  // reset profile if user logs out
+  // get current users profile from db and save in profile state
   useEffect(() => {
-    if (!user.id) {
-      setProfile(null);
-      return;
-    }
-
-    // get current users profile from db and save in profile state
+    setProfile(null);
     const getProfile = async () => {
       try {
-        if (!user.id) return;
-        const profile = await profileRepository.getById(user.id); //skal bruke service
-        setProfile(profile);
+        const result = await getProfileInfo();
+        setProfile(result);
+        setSavedProfile(result);
       } catch (e) {
         console.error("We couldn't find you: ", e);
       }
     };
     getProfile();
-  }, [user.id]);
+  }, []);
 
   const handleEdit = () => {
     setIsEditing(true);
   };
 
   const handleCancel = () => {
-    if (!profile) return; // lag error handling
-    setProfile(profile); // discard local changes
+    setProfile(savedProfile);
     setIsEditing(false);
   };
 
   const handleSave = async () => {
     try {
-      if (!user.id || !profile) return;
-      const updated = await profileRepository.updateProfile(user.id, profile);
+      if (!profile) {
+        console.error("No profile to update");
+        return;
+      }
+      const updated = await updateProfile(profile);
       setProfile(updated);
+      setSavedProfile(updated);
       setIsEditing(false);
-      console.log("Saved");
     } catch (e) {
       console.error("Failed to save profile ", e);
     }
@@ -59,92 +65,79 @@ export default function UserProfileCard({ data }: UserProfileProps) {
 
   // map changes to the profile state
   const updateField = <K extends keyof Profile>(key: K, value: Profile[K]) => {
-    setProfile((prev) => {
-      if (!prev) return prev;
-      return {
-        ...prev,
-        [key]: value,
-      };
-    });
+    setProfile((prev) => (prev ? { ...prev, [key]: value } : prev));
   };
 
+  // Ett felt: viser tekst, eller input når man redigerer
+  const renderField = (
+    label: string,
+    value: string | number | null | undefined,
+    onChange: (text: string) => void,
+    keyboardType: KeyboardTypeOptions = "default",
+  ) => (
+    <View style={styles.row}>
+      <Text style={styles.label}>{label}</Text>
+      {isEditing ? (
+        <TextInput
+          style={styles.input}
+          value={value != null ? String(value) : ""}
+          onChangeText={onChange}
+          placeholder={label}
+          placeholderTextColor="#8A8466"
+          keyboardType={keyboardType}
+        />
+      ) : (
+        <Text style={styles.value}>{value || "—"}</Text>
+      )}
+    </View>
+  );
+
+  // Knapp som lyser gult og vibrerer ved trykk
+  const renderButton = (title: string, onPress: () => void) => (
+    <Pressable
+      style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
+      onPress={() => {
+        Vibration.vibrate(50);
+        onPress();
+      }}
+    >
+      {({ pressed }) => (
+        <Text style={[styles.buttonText, pressed && styles.buttonTextPressed]}>
+          {title}
+        </Text>
+      )}
+    </Pressable>
+  );
+
   return (
-    <View style={styles.container}>
-      {isEditing ? (
-        <>
-          <TextInput
-            value={profile?.name}
-            onChangeText={(text) => updateField("name", text)}
-            placeholder="Name"
-          />
-        </>
-      ) : (
-        <Text style={styles.text}>Name: {profile?.name}</Text>
-      )}
+    <View style={styles.card}>
+      <Text style={styles.title}>Profile</Text>
 
-      {isEditing ? (
-        <>
-          <TextInput
-            value={profile?.age}
-            onChangeText={(text) => updateField("age", text)}
-            placeholder="Age"
-          />
-        </>
-      ) : (
-        <Text style={styles.text}>Age: {profile?.age}</Text>
+      {renderField("Name", profile?.name, (t) => updateField("name", t))}
+      {renderField("Birthday", profile?.birthday, (t) =>
+        updateField("birthday", t),
       )}
-
-      {isEditing ? (
-        <>
-          <TextInput
-            value={profile?.bio}
-            onChangeText={(text) => updateField("bio", text)}
-            placeholder="Bio"
-          />
-        </>
-      ) : (
-        <Text style={styles.text}>Bio: {profile?.bio}</Text>
+      {renderField("Bio", profile?.bio, (t) => updateField("bio", t))}
+      {renderField("City", profile?.city, (t) => updateField("city", t))}
+      {renderField("Country", profile?.country, (t) =>
+        updateField("country", t),
       )}
-
-      {isEditing ? (
-        <>
-          <TextInput
-            value={profile?.city}
-            onChangeText={(text) => updateField("city", text)}
-            placeholder="City"
-          />
-        </>
-      ) : (
-        <Text style={styles.text}>City: {profile?.city}</Text>
-      )}
-
-      {isEditing ? (
-        <>
-          <TextInput
-            value={profile?.country}
-            onChangeText={(text) => updateField("country", text)}
-            placeholder="Country"
-          />
-        </>
-      ) : (
-        <Text style={styles.text}>Country: {profile?.country}</Text>
+      {renderField(
+        "Calorie Goal",
+        profile?.calorieGoal || "",
+        (t) => updateField("calorieGoal", Number(t) || 0),
+        "numeric",
       )}
 
       {/* Buttons */}
-      <View>
+      <View style={styles.buttonRow}>
         {isEditing ? (
           <>
-            <Pressable onPress={handleSave}>
-              <Text>Save</Text>
-            </Pressable>
-            <Pressable onPress={handleCancel}>
-              <Text>Cancel</Text>
-            </Pressable>
+            {renderButton("SAVE", handleSave)}
+            {renderButton("CANCEL", handleCancel)}
           </>
         ) : (
-          <Pressable onPress={handleEdit}>
-            <Text>Edit</Text>
-          </Pressable>
+          renderButton("EDIT", handleEdit)
         )}
       </View>
     </View>
@@ -152,18 +145,74 @@ export default function UserProfileCard({ data }: UserProfileProps) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    padding: 24,
+  card: {
+    backgroundColor: "#11140D",
+    borderWidth: 1,
+    borderColor: "#FFC21A",
+    marginHorizontal: 12,
+    marginVertical: 6,
+    padding: 16,
   },
   title: {
-    fontSize: 24,
-    fontWeight: "bold",
+    color: "#FFC21A",
+    fontFamily: "monospace",
+    fontSize: 18,
+    fontWeight: "700",
+    letterSpacing: 2,
+    textTransform: "uppercase",
     marginBottom: 12,
-    color: "white",
   },
-  text: {
-    color: "white",
+  row: {
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#2A2D20",
+  },
+  label: {
+    color: "#8A8466",
+    fontFamily: "monospace",
+    fontSize: 11,
+    letterSpacing: 1.5,
+    textTransform: "uppercase",
+    marginBottom: 4,
+  },
+  value: {
+    color: "#FFC21A",
+    fontFamily: "monospace",
+    fontSize: 15,
+    fontWeight: "700",
+    letterSpacing: 1,
+  },
+  input: {
+    color: "#FFC21A",
+    fontFamily: "monospace",
+    fontSize: 15,
+    borderWidth: 1,
+    borderColor: "#FFC21A",
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+  },
+  buttonRow: {
+    flexDirection: "row",
+    gap: 12,
+    marginTop: 16,
+  },
+  button: {
+    flex: 1,
+    alignItems: "center",
+    paddingVertical: 12,
+    borderWidth: 1,
+    borderColor: "#FFC21A",
+  },
+  buttonPressed: {
+    backgroundColor: "#FFC21A",
+  },
+  buttonText: {
+    color: "#FFC21A",
+    fontFamily: "monospace",
+    fontWeight: "700",
+    letterSpacing: 2,
+  },
+  buttonTextPressed: {
+    color: "#0A0C08",
   },
 });

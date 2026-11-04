@@ -5,7 +5,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { StyleSheet, Text, View, ActivityIndicator } from "react-native";
 import { useAuth } from "@/features/contexts/AuthProvider";
 import { useEffect } from "react";
-
+import Logo from "@/features/shared/Logo";
 //SplashScreen.preventAutoHideAsync();
 
 const activeTintColor = "yellow";
@@ -14,7 +14,9 @@ const inactiveTintColor = "gray";
 const tabOptions = {
   tabBarLabelPositon: "beside-icon",
   tabBarShowLabel: true,
-  headerTitle: "OnlyGainz",
+  headerTitle: () => <Logo width={120} height={120} />,
+  headerStyle: { backgroundColor: "#131312", height: 130 },
+  headerTitleAlign: "center",
 };
 
 const tabScreenOptions = {

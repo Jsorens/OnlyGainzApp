@@ -2,9 +2,24 @@ import { StyleSheet, Text, View, Pressable, ScrollView } from "react-native";
 import HomeIcon from "@/assets/images/svg/HomeIcon.svg";
 import DailyNutritionSummary from "@/features/meal/components/DailyNutritionSummary";
 import { useAuth } from "@/features/contexts/AuthProvider";
-
+import { useProfileAPI } from "@/features/profile/api/profile-api";
+import { useState, useEffect } from "react";
+import { Profile } from "@/features/profile/types/Profile";
+import Logo from "@/features/shared/Logo";
 export default function Home() {
   const { user, session, logout } = useAuth();
+  const { getProfileInfo } = useProfileAPI();
+  const [profileInfo, setProfileInfo] = useState<Profile>();
+
+  useEffect(() => {
+    const fetchProfileInfo = async () => {
+      if (user) {
+        const profileResult = await getProfileInfo();
+        setProfileInfo(profileResult);
+      }
+    };
+    fetchProfileInfo();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -12,11 +27,12 @@ export default function Home() {
         <Pressable style={styles.button} onPress={logout}>
           <Text style={styles.buttonText}>Logout</Text>
         </Pressable>
-        <HomeIcon width={200} height={200} color="yellow" />
+        <Logo />
+        {/* <HomeIcon width={200} height={200} color="yellow" /> */}
         <Text style={styles.title}>Welcome to OnlyGainz!</Text>
 
         {user && session && (
-          <Text style={styles.title}>Hello {user.name}!</Text>
+          <Text style={styles.title}>Hello {profileInfo?.name}!</Text>
         )}
 
         <DailyNutritionSummary />

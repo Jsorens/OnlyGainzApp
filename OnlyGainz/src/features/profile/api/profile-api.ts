@@ -1,4 +1,5 @@
-import { database, config, account } from "@/lib/appwrite";
+import { account, config, database } from "@/lib/appwrite";
+import { ID } from "react-native-appwrite";
 import { Profile } from "../types/Profile";
 
 type ProfileRow = {
@@ -35,14 +36,14 @@ const getProfileInfo = async () => {
     });
 
     const profileRow = profileResponse.rows.find(
-      (row: any) => row.$id === user.$id,
+      (row: any) => row.user_id === user.$id,
     );
     if (!profileRow) {
       throw new Error("Profile not found");
     }
 
     const ProfileInfo: Profile = {
-      name: profileRow.name,
+      name: profileRow.displayName,
       bio: profileRow.bio,
       birthday: profileRow.birthday,
       calorieGoal: profileRow.calorieGoal,
@@ -61,20 +62,23 @@ const updateProfile = async (profileData: Profile) => {
   if (!user.$id) {
     throw new Error("User not authenticated");
   }
-  const userResponse = await database.updateRow({
-    databaseId: config.db,
-    tableId: config.col.Profiles,
-    rowId: user.$id,
-    data: {
-      name: profileData.name,
-    },
-  });
+  const rowId = await database
+    .listRows({
+      databaseId: config.db,
+      tableId: config.col.Profiles,
+    })
+    .then((res) => {
+      const row = res.rows.find((row: any) => row.user_id === user.$id);
+      if (!row) throw new Error("Profile row not found");
+      return row.$id;
+    });
 
-  const profileResponse = await database.updateRow({
+  await database.updateRow({
     databaseId: config.db,
     tableId: config.col.Profiles,
-    rowId: user.$id,
+    rowId: rowId,
     data: {
+      displayName: profileData.name,
       bio: profileData.bio,
       birthday: profileData.birthday,
       calorieGoal: profileData.calorieGoal,
@@ -96,13 +100,12 @@ const createProfile = async () => {
   await database.createRow({
     databaseId: config.db,
     tableId: config.col.Profiles,
-    rowId: user.$id,
+    rowId: ID.unique(),
     data: {
-      name: user.name ?? "",
-      bio: "",
-      birthday: null,
-      city: "",
-      country: "",
+      user_id: user.$id,
+      displayName: user.name ?? "",
     },
   });
+
+  console.log("Profile created for user: ", user.$id);
 };

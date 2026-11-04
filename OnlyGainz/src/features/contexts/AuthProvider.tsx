@@ -111,13 +111,12 @@ export default function AuthProvider({ children }: AuthProviderProps) {
       //const userId = accountResult.$id;
 
       await login({ email, password });
-
-      await createProfile();
     } catch (error) {
       console.log("Register error: ", error);
     } finally {
       setLoading(false);
     }
+    await createProfile();
   };
 
   const login = async ({ email, password }: LoginProps) => {
