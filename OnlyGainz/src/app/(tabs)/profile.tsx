@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import UserProfileCard from "@/features/profile/components/UserProfileCard";
 import { useAuth } from "@/features/contexts/AuthProvider";
 
@@ -8,7 +8,9 @@ export default function Profile() {
   return (
     <View style={styles.container}>
       {user ? (
-        <UserProfileCard data={user.$id} />
+        <ScrollView>
+          <UserProfileCard data={user.$id} />
+        </ScrollView>
       ) : (
         <Text>You are not logged in</Text>
       )}

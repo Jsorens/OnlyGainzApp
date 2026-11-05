@@ -3,7 +3,7 @@
     "name": "OnlyGainz",
     "slug": "OnlyGainz",
     "version": "1.0.0",
-    "orientation": "portrait",
+    "orientation": "default",
     "icon": "./assets/images/icon.png",
     "scheme": "onlygainz",
     "userInterfaceStyle": "automatic",
