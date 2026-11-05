@@ -6,18 +6,30 @@ import { StyleSheet, Text, View, ActivityIndicator } from "react-native";
 import { useAuth } from "@/features/contexts/AuthProvider";
 import { useEffect } from "react";
 import Logo from "@/features/shared/Logo";
+import { useOrientation } from "@/hooks/useOrientation";
 //SplashScreen.preventAutoHideAsync();
 
 const activeTintColor = "yellow";
 const inactiveTintColor = "gray";
 
-const tabOptions = {
-  tabBarLabelPositon: "beside-icon",
-  tabBarShowLabel: true,
-  headerTitle: () => <Logo width={120} height={120} />,
-  headerStyle: { backgroundColor: "#131312", height: 130 },
-  headerTitleAlign: "center",
-};
+// Header and tab bar options depend on orientation: in landscape there is
+// little vertical space, so the logo header shrinks and labels sit beside icons.
+const getTabOptions = (isLandscape: boolean) =>
+  ({
+    tabBarLabelPosition: isLandscape ? "beside-icon" : "below-icon",
+    tabBarShowLabel: true,
+    headerTitle: () =>
+      isLandscape ? (
+        <Logo width={60} height={60} />
+      ) : (
+        <Logo width={120} height={120} />
+      ),
+    headerStyle: {
+      backgroundColor: "#131312",
+      height: isLandscape ? 70 : 130,
+    },
+    headerTitleAlign: "center",
+  }) as const;
 
 const tabScreenOptions = {
   tabBarActiveTintColor: activeTintColor,
@@ -30,6 +42,7 @@ export default function TabLayout() {
   const { session, isAdmin } = useAuth();
   const segments = useSegments();
   const router = useRouter();
+  const { isLandscape } = useOrientation();
   /*
   useEffect(() => {
     if (!loading) {
@@ -39,7 +52,7 @@ export default function TabLayout() {
   */
 
   return (
-    <Tabs screenOptions={{ ...tabOptions }}>
+    <Tabs screenOptions={getTabOptions(isLandscape)}>
       <Tabs.Screen
         name="index"
         options={{
@@ -47,7 +60,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <View style={styles.iconContainer}>
               <FontAwesome name="home" size={iconWidth} color={color} />
-              {focused && <View style={styles.activeLine} />}
+              {focused && !isLandscape && <View style={styles.activeLine} />}
             </View>
           ),
           ...tabScreenOptions,
@@ -61,7 +74,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <View style={styles.iconContainer}>
               <FontAwesome name="cutlery" size={iconWidth} color={color} />
-              {focused && <View style={styles.activeLine} />}
+              {focused && !isLandscape && <View style={styles.activeLine} />}
             </View>
           ),
           ...tabScreenOptions,
@@ -74,7 +87,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <View style={styles.iconContainer}>
               <FontAwesome6 name="dumbbell" size={iconWidth} color={color} />
-              {focused && <View style={styles.activeLine} />}
+              {focused && !isLandscape && <View style={styles.activeLine} />}
             </View>
           ),
           ...tabScreenOptions,
@@ -87,7 +100,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <View style={styles.iconContainer}>
               <FontAwesome name="user" size={iconWidth} color={color} />
-              {focused && <View style={styles.activeLine} />}
+              {focused && !isLandscape && <View style={styles.activeLine} />}
             </View>
           ),
           ...tabScreenOptions,
@@ -101,7 +114,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <View style={styles.iconContainer}>
               <FontAwesome name="gear" size={iconWidth} color={color} />
-              {focused && <View style={styles.activeLine} />}
+              {focused && !isLandscape && <View style={styles.activeLine} />}
             </View>
           ),
           ...tabScreenOptions,
@@ -116,7 +129,7 @@ export default function TabLayout() {
             tabBarIcon: ({ color, focused }) => (
               <View style={styles.iconContainer}>
                 <FontAwesome name="user" size={iconWidth} color={color} />
-                {focused && <View style={styles.activeLine} />}
+                {focused && !isLandscape && <View style={styles.activeLine} />}
               </View>
             ),
             ...tabScreenOptions,

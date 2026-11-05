@@ -1,16 +1,20 @@
 import {
   View,
+  ScrollView,
   TextInput,
   Text,
   TouchableOpacity,
   StyleSheet,
+  Pressable,
 } from "react-native";
 import { useState } from "react";
 import { useAuth } from "@/features/contexts/AuthProvider";
+import { useOrientation } from "@/hooks/useOrientation";
 import { Redirect, Link } from "expo-router";
 import Logo from "@/features/shared/Logo";
 export default function LoginScreen() {
   const { login, session, isAdmin, loading } = useAuth();
+  const { isLandscape } = useOrientation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -28,11 +32,18 @@ export default function LoginScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView
+      contentContainerStyle={styles.container}
+      keyboardShouldPersistTaps="handled"
+    >
       <View>
-        <Text style={styles.headline}>Log In</Text>
+        <Text
+          style={[styles.headline, isLandscape && styles.headlineLandscape]}
+        >
+          <Text style={styles.label}>Log In</Text>
+        </Text>
 
-        <Text>Email:</Text>
+        <Text style={styles.label}>Email:</Text>
         <TextInput
           placeholder="Enter your email..."
           style={styles.input}
@@ -40,7 +51,7 @@ export default function LoginScreen() {
           onChangeText={(text) => setEmail(text)}
         />
 
-        <Text>Password:</Text>
+        <Text style={styles.label}>Password:</Text>
         <TextInput
           style={styles.input}
           placeholder="Password"
@@ -52,15 +63,18 @@ export default function LoginScreen() {
         <TouchableOpacity style={styles.button} onPress={handleSubmit}>
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
-        <Link href="/auth/register">Register</Link>
+
+        <Link href="/auth/register" style={styles.registerButton}>
+          <Text style={styles.registerButtonText}>Register</Text>
+        </Link>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     padding: 20,
     justifyContent: "center",
   },
@@ -70,6 +84,10 @@ const styles = StyleSheet.create({
     marginBottom: 50,
     fontWeight: 700,
     fontStyle: "italic",
+  },
+  headlineLandscape: {
+    marginTop: 0,
+    marginBottom: 6,
   },
   input: {
     borderWidth: 1,
@@ -90,5 +108,21 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "white",
     fontSize: 18,
+  },
+  registerButton: {
+    marginTop: 10,
+    padding: 12,
+    borderRadius: 6,
+    alignItems: "center",
+    backgroundColor: "grey",
+    alignSelf: "center",
+  },
+  registerButtonText: {
+    color: "white",
+    fontSize: 18,
+  },
+  label: {
+    color: "white",
+    marginBottom: 4,
   },
 });
